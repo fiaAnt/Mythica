@@ -124,7 +124,7 @@ review_schema = types.Schema(
 
 # --- AI Request (Single Key) ---
 raw_content = None
-used_model = "gemini-2.0-flash"  # ИСПРАВЛЕНО
+used_model = "gemini-2.5-flash"  # ИСПРАВЛЕНО
 
 print("🤖 Connecting to Gemini...")
 try:
