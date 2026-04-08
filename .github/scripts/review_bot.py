@@ -2,113 +2,90 @@ import os
 import json
 import re
 import sys
+import time
 from google import genai
 from google.genai import types
 from github import Github, Auth
+from base64 import b64decode
 
-# --- Configuration ---
+# --- CONFIG ---
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 REPO = os.getenv('REPO_NAME')
 PR_NUM_STR = os.getenv('PR_NUMBER')
 
-# Critical checks for missing configuration
 if not GEMINI_API_KEY:
     print("❌ Error: GEMINI_API_KEY is missing!")
     sys.exit(1)
-
 if not GITHUB_TOKEN or not REPO or not PR_NUM_STR:
     print("❌ Error: Missing GITHUB_TOKEN, REPO_NAME or PR_NUMBER!")
     sys.exit(1)
 
 PR_NUM = int(PR_NUM_STR)
 
-# --- GitHub Connection ---
+# --- GITHUB ---
 auth = Auth.Token(GITHUB_TOKEN)
 g = Github(auth=auth)
 repo = g.get_repo(REPO)
 pr = repo.get_pull(PR_NUM)
 last_commit = list(pr.get_commits())[-1]
 
-# --- Error Handling Helper ---
-def post_error_comment(error_message):
-    """Posts a comment to the PR if the bot encounters a critical failure"""
-    fallback_text = (
-        f"### 🤖 Oops, AI Code Review is temporarily unavailable\n"
-        f"I tried to review this PR, but something went wrong. "
-        f"The AI might have returned a broken response, or API limits were exceeded.\n\n"
-        f"**Error Details:** `{error_message}`\n\n"
-        f"_Check the GitHub Actions logs for more details._"
-    )
+# --- SETTINGS ---
+BATCH_SIZE = 20
+MAX_PATCH_CHARS = 50000  # увеличенный лимит
+MAX_COMMENTS = 20
+RETRY_COUNT = 3
+CONTEXT_LINES = 3  # сколько строк контекста добавлять сверху/снизу
+BLOCK_SIZE = 3000  # разбивка большого патча по символам
+
+# --- HELPERS ---
+def post_error_comment(msg):
     try:
-        pr.create_issue_comment(fallback_text)
-        print("✅ Fallback error comment posted to PR.")
-    except Exception as e:
-        print(f"❌ Failed to post error comment: {e}")
+        pr.create_issue_comment(f"❌ AI Review failed:\n`{msg}`")
+    except:
+        pass
 
-# --- Helper: Strict Diff Parsing ---
 def get_changed_lines_only(patch):
-    """Returns only line numbers that were ADDED (+) in this PR."""
     valid_lines = set()
-    if not patch:
-        return valid_lines
-
     current_new_line = 0
     for line in patch.split('\n'):
-        match = re.match(r'^@@ \-\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@', line)
+        match = re.match(r'^@@ \-\d+(?:,\d+)? \+(\d+)', line)
         if match:
             current_new_line = int(match.group(1))
             continue
-
         if line.startswith('+') and not line.startswith('+++'):
             valid_lines.add(current_new_line)
             current_new_line += 1
         elif line.startswith(' '):
             current_new_line += 1
-        elif line.startswith('-'):
-            pass
-
     return valid_lines
 
-# --- Fetching Diff ---
-print(f"Fetching diff for PR #{PR_NUM}...")
-diff_text = ""
-file_valid_lines = {}
+def call_gemini(client, prompt, schema):
+    for attempt in range(RETRY_COUNT):
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                    response_schema=schema,
+                    temperature=0.1,
+                ),
+            )
+            return response.text
+        except Exception as e:
+            print(f"Retry {attempt+1}/{RETRY_COUNT} failed: {e}")
+            time.sleep(5)
+    raise Exception("Gemini API failed after retries")
 
-files = list(pr.get_files())
-for file in files:
-    # Skip deleted/renamed/empty files
-    if file.status in ["removed", "deleted", "renamed"] or not file.patch:
-        continue
+def get_patch_blocks(patch, block_size=BLOCK_SIZE):
+    """Разбиваем большой patch на блоки по block_size символов."""
+    blocks = []
+    for i in range(0, len(patch), block_size):
+        blocks.append(patch[i:i+block_size])
+    return blocks
 
-    valid_set = get_changed_lines_only(file.patch)
-    if not valid_set:
-        continue
-
-    file_valid_lines[file.filename] = valid_set
-    diff_text += f"\n--- FILE: {file.filename} ---\n{file.patch}\n"
-
-if not diff_text.strip():
-    print("No commentable changes found.")
-    sys.exit(0)
-
-# Truncate to safe limit
-if len(diff_text) > 35000:
-    diff_text = diff_text[:35000] + "\n...(truncated)..."
-
-# --- PROMPT ENGINEERING ---
-prompt = f"""
-You are a cynical, hard-to-please Senior Code Reviewer.
-Your goal is to make the code cleaner, safer, and more maintainable.
-INSTRUCTIONS:
-1. **Focus strictly on:** Logic bugs, security, performance, and cleanliness.
-2. **STRICTLY PROHIBITED:** NO compliments. NO minor formatting comments.
-3. `line` MUST be a line number from the provided diff that starts with `+`.
-Review these changes:
-{diff_text}
-"""
-
-# --- STRICT JSON SCHEMA FOR AI ---
+# --- STRICT JSON SCHEMA ---
 review_schema = types.Schema(
     type=types.Type.ARRAY,
     items=types.Schema(
@@ -122,93 +99,71 @@ review_schema = types.Schema(
     )
 )
 
-# --- AI Request (Single Key) ---
-raw_content = None
-used_model = "gemini-2.0-flash"  # ИСПРАВЛЕНО
+# --- MAIN ---
+files = list(pr.get_files())
+all_comments = []
 
-print("🤖 Connecting to Gemini...")
-try:
-    client = genai.Client(api_key=GEMINI_API_KEY)
+print(f"🔍 Reviewing PR #{PR_NUM} with {len(files)} files in batches of {BATCH_SIZE}...")
 
-    response = client.models.generate_content(
-        model=used_model,
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            response_mime_type="application/json",
-            response_schema=review_schema, # Enable forced schema
-            temperature=0.1, # Lower temperature to reduce AI "hallucinations"
-        ),
-    )
-    raw_content = response.text
-    print("✅ Analysis complete.")
+client = genai.Client(api_key=GEMINI_API_KEY)
 
-except Exception as e:
-    error_msg = f"Gemini API Error: {str(e)}"
-    print(f"❌ {error_msg}")
-    post_error_comment(error_msg)
-    sys.exit(1)
+for batch_start in range(0, len(files), BATCH_SIZE):
+    batch_files = files[batch_start:batch_start + BATCH_SIZE]
+    batch_comments = []
 
-# --- Parsing & Posting ---
-comments_to_send = []
-
-try:
-    if not raw_content:
-        raise ValueError("AI returned an empty response.")
-
-    # No sanitizers needed! The schema guarantees valid JSON.
-    ai_comments = json.loads(raw_content)
-
-    for comment in ai_comments:
-        path = comment.get('path')
-        line = int(comment.get('line', 0))
-        body = comment.get('body')
-
-        if path not in file_valid_lines or line not in file_valid_lines[path]:
+    for file in batch_files:
+        if file.status in ["removed", "deleted", "renamed"] or not file.patch:
             continue
 
-        comments_to_send.append({
-            'path': path,
-            'line': line,
-            'body': body
-        })
+        # Только нужные расширения
+        if not file.filename.endswith(('.ts', '.tsx', '.js', '.jsx')):
+            continue
 
-except json.JSONDecodeError as e:
-    print(f"❌ JSON Parsing Error: {e}")
-    post_error_comment(f"Failed to parse JSON from AI: {e}\nRaw Output: {raw_content}")
-    sys.exit(0)
-except Exception as e:
-    print(f"❌ Error: {e}")
-    post_error_comment(f"Critical script error: {str(e)}")
-    sys.exit(1)
+        valid_lines = get_changed_lines_only(file.patch)
+        if not valid_lines:
+            continue
 
-# --- Batch Posting ---
-if comments_to_send:
-    MAX_COMMENTS = 15
-    if len(comments_to_send) > MAX_COMMENTS:
-        print(f"Info: Truncating {len(comments_to_send)} comments to top {MAX_COMMENTS}.")
-        comments_to_send = comments_to_send[:MAX_COMMENTS]
+        patch = file.patch[:MAX_PATCH_CHARS]  # увеличенный лимит
+        blocks = get_patch_blocks(patch)
 
-    print(f"🚀 Posting {len(comments_to_send)} comments as a Single Review...")
-    try:
-        pr.create_review(
-            commit=last_commit,
-            body="### 🤖 AI Code Review\n_Feedback provided by Gemini Flash_",
-            event="COMMENT",
-            comments=comments_to_send
-        )
-        print("✅ Review posted successfully.")
-    except Exception as e:
-        print(f"❌ GitHub API Error: {e}")
-        post_error_comment(f"Failed to publish review via GitHub API: {str(e)}")
-else:
+        for block in blocks:
+            prompt = f"""
+You are a cynical, hard-to-please Senior Code Reviewer.
+Focus strictly on logic bugs, security, performance, and maintainability.
+DO NOT give compliments or formatting notes.
+Review only this code fragment from file {file.filename}:
+{block}
+"""
+            try:
+                raw_content = call_gemini(client, prompt, review_schema)
+                ai_comments = json.loads(raw_content)
+                for c in ai_comments:
+                    path = c.get("path")
+                    line = int(c.get("line", 0))
+                    body = c.get("body")
+                    if path == file.filename and line in valid_lines:
+                        batch_comments.append({'path': path, 'line': line, 'body': body})
+            except Exception as e:
+                print(f"⚠️ Failed on file {file.filename}: {e}")
+                post_error_comment(f"Failed to review {file.filename}: {e}")
+                continue
+
+    if len(batch_comments) > MAX_COMMENTS:
+        batch_comments = batch_comments[:MAX_COMMENTS]
+
+    if batch_comments:
+        try:
+            pr.create_review(
+                commit=last_commit,
+                body=f"### 🤖 AI Code Review (batch {batch_start//BATCH_SIZE + 1})",
+                event="COMMENT",
+                comments=batch_comments
+            )
+            print(f"✅ Posted {len(batch_comments)} comments for batch {batch_start//BATCH_SIZE + 1}")
+            all_comments.extend(batch_comments)
+        except Exception as e:
+            post_error_comment(f"Failed to post review for batch: {e}")
+
+if not all_comments:
+    pr.create_issue_comment("✅ AI Review: no critical issues found.")
     print("👍 No critical issues found.")
-    # Added a success message directly to PR
-    try:
-        success_text = (
-            "### 🤖 AI Code Review\n"
-            "Everything looks good! No critical issues found. 👍"
-        )
-        pr.create_issue_comment(success_text)
-        print("✅ Success comment posted to PR.")
-    except Exception as e:
-        print(f"❌ Failed to post success comment: {e}")
