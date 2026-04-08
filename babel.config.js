@@ -7,6 +7,7 @@ module.exports = {
         root: ['.'],
         alias: {
           '@': './src',
+          '@assets': './assets',
         },
         extensions: ['.ios.js', '.android.js', '.js', '.jsx', '.json', '.ts', '.tsx'],
         cwd: 'babelrc',

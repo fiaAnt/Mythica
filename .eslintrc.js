@@ -21,7 +21,7 @@ module.exports = {
     sourceType: 'module',
   },
   settings: {
-    react: {
+    react: {  
       version: 'detect',
     },
   },
