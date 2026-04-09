@@ -133,50 +133,29 @@ review_schema = types.Schema(
 
 # --- AI Request ---
 raw_content = None
-used_model = "gemini-2.5-flash"
-MAX_RETRIES_PER_KEY = 3
+used_model = "gemini-2.5-flash"  # ИСПРАВЛЕНО
 
-for i, key in enumerate(valid_api_keys):
-    print(f"\n🤖 Connecting to Gemini with Key #{i+1}...")
-    client = genai.Client(api_key=key)
-    success = False
-    
-    for attempt in range(MAX_RETRIES_PER_KEY):
-        try:
-            response = client.models.generate_content(
-                model=used_model,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    response_schema=review_schema,
-                    temperature=0.1,
-                ),
-            )
-            raw_content = response.text
-            print("✅ Analysis complete.")
-            success = True
-            break
-            
-        except Exception as e:
-            error_str = str(e)
-            print(f"⚠️ Key #{i+1} (Attempt {attempt+1}/{MAX_RETRIES_PER_KEY}) failed: {error_str}")
-            
-            # If this is a server block (503) or rate limit (429)
-            if '503' in error_str or '429' in error_str or 'UNAVAILABLE' in error_str:
-                wait_time = (attempt + 1) * 15
-                print(f"⏳ Google security filters triggered. Sleeping for {wait_time} seconds...")
-                time.sleep(wait_time)
-            else:
-                break
-    
-    if success:
-        break
-    
-    if i == len(valid_api_keys) - 1:
-        error_msg = "All API keys failed due to heavy server load or WAF blocking."
-        print(f"💀 {error_msg}")
-        post_error_comment(error_msg)
-        sys.exit(1)
+print("🤖 Connecting to Gemini...")
+try:
+    client = genai.Client(api_key=GEMINI_API_KEY)
+
+    response = client.models.generate_content(
+        model=used_model,
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema=review_schema, # Enable forced schema
+            temperature=0.1, # Lower temperature to reduce AI "hallucinations"
+        ),
+    )
+    raw_content = response.text
+    print("✅ Analysis complete.")
+
+except Exception as e:
+    error_msg = f"Gemini API Error: {str(e)}"
+    print(f"❌ {error_msg}")
+    post_error_comment(error_msg)
+    sys.exit(1)
 
 # --- Parsing & Posting ---
 comments_to_send = []
