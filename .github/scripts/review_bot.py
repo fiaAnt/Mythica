@@ -11,12 +11,15 @@ from github import Github, Auth
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 REPO = os.getenv('REPO_NAME')
 PR_NUM_STR = os.getenv('PR_NUMBER')
+
+# Список GEMINI API ключей
 API_KEYS = [
     os.getenv('GEMINI_API_KEY'),
     os.getenv('GEMINI_API_KEY2'),
     os.getenv('GEMINI_API_KEY3'),
 ]
 
+# Оставляем только валидные ключи
 valid_api_keys = [k for k in API_KEYS if k]
 
 if not valid_api_keys:
@@ -133,38 +136,36 @@ review_schema = types.Schema(
 
 # --- AI Request ---
 raw_content = None
-used_model = "gemini-2.5-flash"  # ИСПРАВЛЕНО
+used_model = "gemini-2.5-flash"
 
 print("🤖 Connecting to Gemini...")
-try:
-    client = genai.Client(api_key=GEMINI_API_KEY)
+for key in valid_api_keys:
+    try:
+        client = genai.Client(api_key=key)
+        response = client.models.generate_content(
+            model=used_model,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                response_schema=review_schema,
+                temperature=0.1,
+            ),
+        )
+        raw_content = response.text
+        print("✅ Analysis complete.")
+        break
+    except Exception as e:
+        print(f"Key failed: {key}, error: {e}")
+        continue
 
-    response = client.models.generate_content(
-        model=used_model,
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            response_mime_type="application/json",
-            response_schema=review_schema, # Enable forced schema
-            temperature=0.1, # Lower temperature to reduce AI "hallucinations"
-        ),
-    )
-    raw_content = response.text
-    print("✅ Analysis complete.")
-
-except Exception as e:
-    error_msg = f"Gemini API Error: {str(e)}"
-    print(f"❌ {error_msg}")
-    post_error_comment(error_msg)
+if not raw_content:
+    post_error_comment("All GEMINI_API_KEYs failed or returned an error.")
     sys.exit(1)
 
 # --- Parsing & Posting ---
 comments_to_send = []
 
 try:
-    if not raw_content:
-        raise ValueError("AI returned an empty response.")
-    
-    # No more sanitizers or regex! The schema guarantees valid JSON.
     ai_comments = json.loads(raw_content)
     
     for comment in ai_comments:
@@ -181,10 +182,6 @@ try:
             'body': body
         })
 
-except json.JSONDecodeError as e:
-    print(f"❌ JSON Parsing Error: {e}")
-    post_error_comment(f"Failed to parse JSON from AI: {e}\nRaw Output: {raw_content}")
-    sys.exit(0)
 except Exception as e:
     print(f"❌ Error: {e}")
     post_error_comment(f"Critical script error: {str(e)}")
@@ -211,7 +208,6 @@ if comments_to_send:
         post_error_comment(f"Failed to publish review via GitHub API: {str(e)}")
 else:
     print("👍 No critical issues found.")
-    # Added a success message directly to PR
     try:
         success_text = (
             "### 🤖 AI Code Review\n"
