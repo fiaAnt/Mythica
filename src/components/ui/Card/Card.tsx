@@ -1,64 +1,79 @@
-import React from 'react';
-import { View, Image, StyleSheet, TouchableOpacity, ImageSourcePropType } from 'react-native';
 import card from '@assets/images/card.png';
+import React, { useMemo } from 'react';
+import { Image, ImageSourcePropType, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface CardProps {
     overlayImage?: ImageSourcePropType | string | null;
     onPress?: () => void;
     children?: React.ReactNode;
+    cardWidth?: number;
 }
 
 export const Card: React.FC<CardProps> = ({
     overlayImage = null,
     onPress,
     children,
+    cardWidth,
 }) => {
-    const getImageSource = () => {
-        if (!overlayImage) return null;
+    const getImageSource = (): ImageSourcePropType | undefined => {
+        if (!overlayImage) return undefined;
         if (typeof overlayImage === 'string') {
             return { uri: overlayImage };
         }
         return overlayImage;
     };
 
+    const overlaySource = getImageSource();
+    const overlayDynamicStyle = useMemo(() => {
+        if (!cardWidth) {
+            return styles.overlayImage;
+        }
+
+        const cardHeight = cardWidth / 0.7;
+        return [
+            styles.overlayImage,
+            {
+                width: cardWidth * 0.6,
+                height: cardHeight * 0.7,
+            },
+        ];
+    }, [cardWidth]);
+
     const CardContent = () => (
         <View style={styles.card}>
             <View style={styles.imageContainer}>
                 <Image source={card} style={styles.baseImage} />
-                {overlayImage && (
+                {overlaySource && (
                     <View style={styles.overlayContainer}>
-                        <Image source={getImageSource()} style={styles.overlayImage} />
+                        <Image source={overlaySource} style={overlayDynamicStyle} />
                     </View>
                 )}
                 {children && <View style={styles.content}>{children}</View>}
             </View>
         </View>
     );
-    
+
     if (onPress) {
         return (
-            <TouchableOpacity onPress={onPress}>
+                <TouchableOpacity onPress={onPress} style={styles.touchable}>
                 <CardContent />
-            </TouchableOpacity>
-        );
+                </TouchableOpacity>
+                );
     }
     
     return <CardContent />;
 };
 
 const styles = StyleSheet.create({
+    touchable: {
+        width: '100%',
+    },
     card: {
-        width: 200,
-        height: 320,
-        margin: 10,
+        width: '100%',
+        aspectRatio: 0.6,
         overflow: 'hidden',
         borderRadius: 12,
         backgroundColor: '#fff',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
     },
     imageContainer: {
         position: 'relative',
@@ -74,20 +89,16 @@ const styles = StyleSheet.create({
     },
     overlayContainer: {
         position: 'absolute',
-        top: 30,
-        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
         zIndex: 10,
     },
     overlayImage: {
-        width: 180,
-        height: 240,
         resizeMode: 'contain',
     },
     content: {
         position: 'absolute',
         bottom: 10,
-        left: 0,
-        right: 0,
         padding: 12,
     },
 });

@@ -124,13 +124,13 @@ export default function AppDropdown({
 }
 
 const styles = StyleSheet.create({
-  container: { width: "100%", gap: 6 },
-  label: { color: TEXT, fontSize: 14, fontWeight: "600" },
+  container: { flex: 1, marginVertical: 10},
+  label: { color: TEXT, fontSize: 14},
 
   input: {
     backgroundColor: ACCENT,
     padding: 12,
-    borderRadius: 12,
+    borderRadius: 20,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -148,9 +148,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "#d2c4ae",
-    elevation: 4,
     maxHeight: 250,
-    overflow: "hidden",
+      overflow: "hidden",
   },
 
   item: {

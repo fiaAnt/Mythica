@@ -29,21 +29,20 @@ export const AppText: React.FC<AppTextProps> = ({
 
 const styles = StyleSheet.create({
     title: {
-        fontSize: 28,
-//        fontWeight: 'bold',
-        fontFamily: 'Georgia',
+        fontSize: 24,
+        fontFamily: 'Inria Sans',
         color: '#000',
     },
     subtitle: {
         fontSize: 20,
-        fontFamily: 'Georgia',
+        fontFamily: 'Inria Sans',
     },
     body: {
         fontSize: 16,
         lineHeight: 24,
     },
     small: {
-        fontSize: 12,
+        fontSize: 14,
         color: '#666',
     },
 });

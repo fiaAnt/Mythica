@@ -3,12 +3,16 @@ import { Text } from 'react-native';
 
 export default function TabLayout() {
   return (
-    <Tabs>
+    <Tabs
+          screenOptions={{
+                 tabBarStyle: { display: 'none' },
+              headerShown: false,
+               }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'home',
-          tabBarIcon: ({ color }) => <Text style={{ color, fontSize: 20 }}>!</Text>,
+          title: 'Mythica',
+       
         }}
       />
     </Tabs>

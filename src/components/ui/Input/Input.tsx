@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
 import { AppText } from '@/components/ui/AppText';
-import searchIcon from '@assets/images/search.png';
 
 interface InputProps {
     placeholder: string;
     value?: string;
     onChangeText?: (text: string) => void;
+    icon?: ImageSourcePropType;
     onSearch?: () => void;
 }
 
@@ -15,15 +15,18 @@ export const Input: React.FC<InputProps> = ({
     value = '',
     onChangeText = () => {},
     onSearch = () => {},
+    icon,
 }) => {
     return (
             <View style={styles.container}>
-            <Image
-            source={searchIcon}
-            style={styles.icon}
-            />
+            {icon && (
+                           <Image
+                               source={icon}
+                               style={styles.icon}
+                           />
+                       )}
             <TextInput
-            style={styles.input}
+            style={[styles.input, !icon && styles.inputWithoutIcon]}
             placeholder={placeholder}
             value={value}
             onChangeText={onChangeText}
@@ -64,4 +67,7 @@ const styles = StyleSheet.create({
         padding: 0,
         margin: 0,
     },
+    inputWithoutIcon: {
+            marginLeft: 0,
+        },
 });
