@@ -29,10 +29,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         borderRadius: 20,
-        gap: 10,
+        marginBottom: 10,
     },
     switch: {
-           transform: [{ scale: 0.8 }],
-       },
+        transform: [{ scale: 0.8 }],
+    },
 });
 

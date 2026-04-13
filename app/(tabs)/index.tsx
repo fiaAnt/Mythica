@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { SafeAreaView, StyleSheet, ScrollView, View } from "react-native";
-import { Bar } from "@/components/Bar";
+import { StyleSheet, View } from "react-native";
+import { Bar } from "@/components/ui/Bar";
 import { Input } from "@/components/ui/Input";
 import { CardList } from "@/components/ui/CardList";
 import { AppDropdown } from "@/components/ui/AppDropdown";
@@ -8,6 +8,8 @@ import { AppText } from "@/components/ui/AppText";
 import { Toggle } from "@/components/Toggle";
 import afina from "@assets/images/afina.png";
 import searchIcon from '@assets/images/search.png';
+import user from "@assets/images/user.png";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const OPTIONS = [
     { label: "Greek", value: "Greek" },
@@ -33,6 +35,7 @@ export default function HomeScreen() {
     const [results, setResults] = useState("");
     const [selectedMythology, setSelectedMythology] = useState<string | undefined>();
     const [selectedType, setSelectedType] = useState<string | undefined>();
+    const insets = useSafeAreaInsets()
     
     
     const handleSearch = () => {
@@ -41,13 +44,13 @@ export default function HomeScreen() {
     };
     
     return (
-        <SafeAreaView style={styles.safeArea}>
+            <View style={[styles.container, { paddingTop: insets.top }]}>
             
             <CardList
                 data={CARDS}
                 header={
                     <View style={styles.scrollContent}>
-                    <Bar />
+                    <Bar path = '/profile' title= 'Mythica' icon = {user}/>
                         <Input
                             value={searchText}
                             onChangeText={setSearchText}
@@ -76,17 +79,16 @@ export default function HomeScreen() {
                     </View>
                 }
             />
-        </SafeAreaView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#000",
     },
     scrollContent: {
-        paddingVertical: 20,
         gap: 10,
     },
     dropdownRow: {

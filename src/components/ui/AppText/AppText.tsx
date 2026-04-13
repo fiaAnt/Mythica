@@ -1,25 +1,28 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, TextStyle } from 'react-native';
 
 interface AppTextProps {
     children: string;
     variant?: 'title' | 'subtitle' | 'body' | 'small';
     color?: string;
     align?: 'left' | 'center' | 'right';
+    style?: TextStyle | TextStyle[];
 }
 
 export const AppText: React.FC<AppTextProps> = ({
     children,
     variant = 'body',
     color,
-    align = 'left'
+    align = 'left',
+    style,
 }) => {
     return (
         <Text
             style={[
                 styles[variant],
                 { textAlign: align },
-                color && { color }
+                color && { color },
+                style,
             ]}
         >
             {children}
@@ -40,6 +43,8 @@ const styles = StyleSheet.create({
     body: {
         fontSize: 16,
         lineHeight: 24,
+        
+        
     },
     small: {
         fontSize: 14,

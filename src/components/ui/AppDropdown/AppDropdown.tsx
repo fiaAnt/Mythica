@@ -1,12 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  View, TouchableOpacity, StyleSheet,
-  Modal, FlatList, TouchableWithoutFeedback,
-  Dimensions, Animated,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  FlatList,
+  TouchableWithoutFeedback,
+  Dimensions,
+  Animated,
 } from "react-native";
 import { AppText } from '@/components/ui/AppText';
 
-interface DropdownOption { label: string; value: string; }
+interface DropdownOption {
+  label: string;
+  value: string;
+}
 
 interface MyDropdownProps {
   label: string;
@@ -18,6 +26,11 @@ interface MyDropdownProps {
 
 const ACCENT = "#DFD4C2";
 const TEXT = "#212529";
+
+const DROPDOWN_ANIMATION = {
+  OPEN: 180,
+  CLOSE: 140,
+};
 
 export default function AppDropdown({
   label,
@@ -48,7 +61,7 @@ export default function AppDropdown({
       setOpen(true);
       Animated.timing(anim, {
         toValue,
-        duration: open ? 140 : 180,
+        duration: open ? DROPDOWN_ANIMATION.CLOSE : DROPDOWN_ANIMATION.OPEN,
         useNativeDriver: true,
       }).start(() => {
         if (toValue === 0) setOpen(false);
@@ -58,13 +71,12 @@ export default function AppDropdown({
 
   return (
     <View ref={ref} style={styles.container}>
-      <AppText variant="body" color={TEXT}>
+          <AppText variant="body" color={TEXT} style={styles.text}>
         {label}
       </AppText>
 
-      <TouchableOpacity style={styles.input} onPress={toggle}>
-        <AppText 
-        >
+      <TouchableOpacity style={styles.dropdownButton} onPress={toggle}>
+        <AppText>
           {selected || placeholder}
         </AppText>
 
@@ -110,7 +122,7 @@ export default function AppDropdown({
                     toggle();
                   }}
                 >
-                  <AppText variant="body" >
+                  <AppText variant="body">
                     {item.label}
                   </AppText>
                 </TouchableOpacity>
@@ -124,10 +136,12 @@ export default function AppDropdown({
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, marginVertical: 10},
-  label: { color: TEXT, fontSize: 14},
+  container: {
+    flex: 1,
+    marginVertical: 10,
+  },
 
-  input: {
+    dropdownButton: {
     backgroundColor: ACCENT,
     padding: 12,
     borderRadius: 20,
@@ -136,20 +150,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  text: { color: TEXT, fontSize: 16 },
-  placeholder: { color: "#6c757d", fontSize: 16 },
-  chevron: { color: TEXT },
-
-  overlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.08)" },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.08)",
+  },
+    text: {
+        marginBottom: 10,
+    },
 
   dropdown: {
     position: "absolute",
     backgroundColor: ACCENT,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#d2c4ae",
+    borderColor: "#000",
     maxHeight: 250,
-      overflow: "hidden",
+    overflow: "hidden",
   },
 
   item: {
@@ -159,5 +174,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#d8cab3",
   },
 
-  selected: { backgroundColor: "#eadfcf" },
+  selected: {
+    backgroundColor: "#eadfcf",
+  },
 });
