@@ -1,3 +1,4 @@
+import time
 import os
 import json
 import re
@@ -7,14 +8,22 @@ from google.genai import types
 from github import Github, Auth
 
 # --- Configuration ---
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
 REPO = os.getenv('REPO_NAME')
 PR_NUM_STR = os.getenv('PR_NUMBER')
 
-# Critical checks for missing configuration
-if not GEMINI_API_KEY:
-    print("❌ Error: GEMINI_API_KEY is missing!")
+# Список GEMINI API ключей
+API_KEYS = [
+    os.getenv('GEMINI_API_KEY'),
+    os.getenv('GEMINI_API_KEY2'),
+    os.getenv('GEMINI_API_KEY3'),
+]
+
+# Оставляем только валидные ключи
+valid_api_keys = [k for k in API_KEYS if k]
+
+if not valid_api_keys:
+    print("❌ Error: No GEMINI_API_KEYS found!")
     sys.exit(1)
 
 if not GITHUB_TOKEN or not REPO or not PR_NUM_STR:
@@ -100,10 +109,13 @@ if len(diff_text) > 35000:
 prompt = f"""
 You are a cynical, hard-to-please Senior Code Reviewer.
 Your goal is to make the code cleaner, safer, and more maintainable.
+
 INSTRUCTIONS:
 1. **Focus strictly on:** Logic bugs, security, performance, and cleanliness.
 2. **STRICTLY PROHIBITED:** NO compliments. NO minor formatting comments.
-3. `line` MUST be a line number from the provided diff that starts with `+`.
+3. **IGNORE BOT INFRASTRUCTURE:** DO NOT review, comment on, or touch any Python (`.py`) files or scripts related to this bot's own source code. Skip them entirely.
+4. `line` MUST be a line number from the provided diff that starts with `+`.
+
 Review these changes:
 {diff_text}
 """
@@ -122,60 +134,54 @@ review_schema = types.Schema(
     )
 )
 
-# --- AI Request (Single Key) ---
+# --- AI Request ---
 raw_content = None
-used_model = "gemini-2.5-flash"  # ИСПРАВЛЕНО
+used_model = "gemini-2.5-flash"
 
 print("🤖 Connecting to Gemini...")
-try:
-    client = genai.Client(api_key=GEMINI_API_KEY)
+for key in valid_api_keys:
+    try:
+        client = genai.Client(api_key=key)
+        response = client.models.generate_content(
+            model=used_model,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                response_schema=review_schema,
+                temperature=0.1,
+            ),
+        )
+        raw_content = response.text
+        print("✅ Analysis complete.")
+        break
+    except Exception as e:
+        print(f"Key failed: {key}, error: {e}")
+        continue
 
-    response = client.models.generate_content(
-        model=used_model,
-        contents=prompt,
-        config=types.GenerateContentConfig(
-            response_mime_type="application/json",
-            response_schema=review_schema, # Enable forced schema
-            temperature=0.1, # Lower temperature to reduce AI "hallucinations"
-        ),
-    )
-    raw_content = response.text
-    print("✅ Analysis complete.")
-
-except Exception as e:
-    error_msg = f"Gemini API Error: {str(e)}"
-    print(f"❌ {error_msg}")
-    post_error_comment(error_msg)
+if not raw_content:
+    post_error_comment("All GEMINI_API_KEYs failed or returned an error.")
     sys.exit(1)
 
 # --- Parsing & Posting ---
 comments_to_send = []
 
 try:
-    if not raw_content:
-        raise ValueError("AI returned an empty response.")
-
-    # No sanitizers needed! The schema guarantees valid JSON.
     ai_comments = json.loads(raw_content)
-
+    
     for comment in ai_comments:
         path = comment.get('path')
         line = int(comment.get('line', 0))
         body = comment.get('body')
-
+        
         if path not in file_valid_lines or line not in file_valid_lines[path]:
             continue
-
+        
         comments_to_send.append({
             'path': path,
             'line': line,
             'body': body
         })
 
-except json.JSONDecodeError as e:
-    print(f"❌ JSON Parsing Error: {e}")
-    post_error_comment(f"Failed to parse JSON from AI: {e}\nRaw Output: {raw_content}")
-    sys.exit(0)
 except Exception as e:
     print(f"❌ Error: {e}")
     post_error_comment(f"Critical script error: {str(e)}")
@@ -187,12 +193,12 @@ if comments_to_send:
     if len(comments_to_send) > MAX_COMMENTS:
         print(f"Info: Truncating {len(comments_to_send)} comments to top {MAX_COMMENTS}.")
         comments_to_send = comments_to_send[:MAX_COMMENTS]
-
+    
     print(f"🚀 Posting {len(comments_to_send)} comments as a Single Review...")
     try:
         pr.create_review(
             commit=last_commit,
-            body="### 🤖 AI Code Review\n_Feedback provided by Gemini Flash_",
+            body="### 🤖 AI Code Review\n",
             event="COMMENT",
             comments=comments_to_send
         )
@@ -202,7 +208,6 @@ if comments_to_send:
         post_error_comment(f"Failed to publish review via GitHub API: {str(e)}")
 else:
     print("👍 No critical issues found.")
-    # Added a success message directly to PR
     try:
         success_text = (
             "### 🤖 AI Code Review\n"
