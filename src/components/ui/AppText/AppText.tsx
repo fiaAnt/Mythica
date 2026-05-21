@@ -1,4 +1,4 @@
-import { Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
 interface AppTextProps {
   children: string;

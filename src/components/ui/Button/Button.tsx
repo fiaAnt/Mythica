@@ -1,5 +1,5 @@
-import { TouchableOpacity, StyleSheet } from 'react-native';
 import { AppText } from '@/components/ui/AppText';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 interface ButtonProps {
   title?: string;

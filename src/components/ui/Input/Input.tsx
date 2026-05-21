@@ -1,6 +1,6 @@
-import { View, TextInput, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { AppText } from '@/components/ui/AppText';
 import searchIcon from '@assets/images/search.png';
+import { Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 interface InputProps {
   placeholder: string;

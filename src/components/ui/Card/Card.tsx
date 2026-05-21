@@ -1,5 +1,4 @@
-import { StyleSheet, TouchableOpacity, ImageSourcePropType } from 'react-native';
-import card from '@assets/images/card.png';
+import { ImageSourcePropType, TouchableOpacity } from 'react-native';
 import { CardContent } from '../CardContent';
 
 interface CardProps {

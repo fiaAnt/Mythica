@@ -1,15 +1,15 @@
-import { useState, useRef, useEffect } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Modal,
-  FlatList,
-  TouchableWithoutFeedback,
-  Dimensions,
-  Animated,
-} from 'react-native';
 import { AppText } from '@/components/ui/AppText';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Animated,
+  Dimensions,
+  FlatList,
+  Modal,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 
 interface DropdownOption {
   label: string;
@@ -50,7 +50,6 @@ export default function AppDropdown({
     : Object.entries(options).map(([label, value]) => ({ label, value }));
   const selected = optionsArray.find((o) => o.value === value);
   const topDistance = 4;
-  
   useEffect(() => {
     const sub = Dimensions.addEventListener('change', () => setOpen(false));
     return () => sub.remove();
