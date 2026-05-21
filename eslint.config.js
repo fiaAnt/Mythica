@@ -1,7 +1,7 @@
-import { defineConfig } from 'eslint/config'
-import expoConfig from 'eslint-config-expo/flat.js'
-import prettierConfig from 'eslint-config-prettier/flat'
-import prettierPlugin from 'eslint-plugin-prettier'
+import { defineConfig } from 'eslint/config';
+import expoConfig from 'eslint-config-expo/flat.js';
+import prettierConfig from 'eslint-config-prettier/flat';
+import prettierPlugin from 'eslint-plugin-prettier';
 
 export default defineConfig([
   expoConfig,
@@ -24,4 +24,4 @@ export default defineConfig([
     },
   },
   prettierConfig,
-])
+]);

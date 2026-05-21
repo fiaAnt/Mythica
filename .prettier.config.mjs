@@ -9,6 +9,6 @@ const config = {
   singleQuote: true,
   jsxSingleQuote: true,
   trailingComma: 'all',
-}
+};
 
-export default config
+export default config;
