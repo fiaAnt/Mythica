@@ -1,22 +1,21 @@
-import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { AppText } from '@/components/ui/AppText';
+import moon from '@assets/images/moon.png';
+import sun from '@assets/images/sun.png';
 import { router } from 'expo-router';
-import { AppText } from "@/components/ui/AppText";
-import user from "@assets/images/user.png";
-import sun from "@assets/images/sun.png";
-import moon from "@assets/images/moon.png";
+import React, { useState } from 'react';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface BarProps {
-    path: string,
-    title: string,
-    icon: string
+  path: string;
+  title: string;
+  icon: string;
 }
 
 export const Bar = ({ path, icon, title }: BarProps) => {
   const [isDay, setIsDay] = useState(false);
 
   const handleUserPress = () => {
-      router.push(`${path}`)
+    router.push(`${path}`);
   };
 
   const handleToggleDayNight = () => {
@@ -30,9 +29,7 @@ export const Bar = ({ path, icon, title }: BarProps) => {
           <Image source={icon} style={styles.avatar} />
         </TouchableOpacity>
 
-        <AppText variant="title">
-          {title}
-        </AppText>
+        <AppText variant="title">{title}</AppText>
       </View>
 
       <TouchableOpacity onPress={handleToggleDayNight}>
@@ -44,15 +41,15 @@ export const Bar = ({ path, icon, title }: BarProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingTop: 10,
   },
   containerLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-      gap: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   avatar: {
     width: 40,

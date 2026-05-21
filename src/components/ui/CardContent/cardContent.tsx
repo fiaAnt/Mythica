@@ -1,5 +1,5 @@
-import { View, Image, StyleSheet, ImageSourcePropType } from 'react-native';
 import card from '@assets/images/card.png';
+import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native';
 
 interface CardContentProps {
   overlayImage?: ImageSourcePropType | string | null;
