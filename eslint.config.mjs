@@ -1,19 +1,22 @@
-import { defineConfig } from 'eslint/config';
-import expoConfig from 'eslint-config-expo/flat.js';
-import prettierConfig from 'eslint-config-prettier/flat';
-import prettierPlugin from 'eslint-plugin-prettier';
+import expoConfig from 'eslint-config-expo/flat.js'
+import prettierConfig from 'eslint-config-prettier/flat'
+import prettierPlugin from 'eslint-plugin-prettier'
+import { defineConfig } from 'eslint/config'
 
 export default defineConfig([
   expoConfig,
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
       prettier: prettierPlugin,
     },
   },
   {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+  },
+  {
     ignores: ['.expo', 'dist', 'node_modules'],
   },
+  prettierConfig,
   {
     rules: {
       'import/no-duplicates': 'warn',
@@ -23,5 +26,4 @@ export default defineConfig([
       'react-hooks/exhaustive-deps': 'warn',
     },
   },
-  prettierConfig,
-]);
+])

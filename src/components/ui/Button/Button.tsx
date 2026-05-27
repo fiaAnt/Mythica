@@ -1,28 +1,24 @@
-import { AppText } from '@/components/ui/AppText';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { AppText } from '@/components/ui/AppText'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 
 interface ButtonProps {
-  title?: string;
-  onPress?: () => void;
-  variant?: 'primary' | 'secondary';
+  title?: string
+  onPress?: () => void
+  variant?: 'primary' | 'secondary'
 }
 
-export const Button = ({
-  title = 'Ok',
-  onPress = () => {},
-  variant = 'primary',
-}: ButtonProps) => {
+export const Button = ({ title = 'Ok', onPress = () => {}, variant = 'primary' }: ButtonProps) => {
   return (
     <TouchableOpacity
       style={[styles.button, variant === 'primary' ? styles.primary : styles.secondary]}
       onPress={onPress}
     >
-      <AppText variant="body" color="#FFFFFF" align="center">
+      <AppText variant='body' color='#FFFFFF' align='center'>
         {title}
       </AppText>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   button: {
@@ -38,4 +34,4 @@ const styles = StyleSheet.create({
   secondary: {
     backgroundColor: '#6C757D',
   },
-});
+})

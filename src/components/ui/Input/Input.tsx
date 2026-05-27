@@ -1,12 +1,12 @@
-import { AppText } from '@/components/ui/AppText';
-import searchIcon from '@assets/images/search.png';
-import { Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { AppText } from '@/components/ui/AppText'
+import searchIcon from '@assets/images/search.png'
+import { Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 
 interface InputProps {
-  placeholder: string;
-  value?: string;
-  onChangeText?: (text: string) => void;
-  onSearch?: () => void;
+  placeholder: string
+  value?: string
+  onChangeText?: (text: string) => void
+  onSearch?: () => void
 }
 
 export const Input = ({
@@ -27,12 +27,12 @@ export const Input = ({
       />
       {value.length > 0 && (
         <TouchableOpacity onPress={() => onChangeText('')}>
-          <AppText variant="body">✕</AppText>
+          <AppText variant='body'>✕</AppText>
         </TouchableOpacity>
       )}
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -59,4 +59,4 @@ const styles = StyleSheet.create({
     padding: 0,
     margin: 0,
   },
-});
+})

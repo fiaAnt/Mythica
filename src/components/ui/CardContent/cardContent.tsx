@@ -1,19 +1,19 @@
-import card from '@assets/images/card.png';
-import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native';
+import card from '@assets/images/card.png'
+import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native'
 
 interface CardContentProps {
-  overlayImage?: ImageSourcePropType | string | null;
-  children?: React.ReactNode;
+  overlayImage?: ImageSourcePropType | string | null
+  children?: React.ReactNode
 }
 
 export const CardContent = ({ overlayImage = null, children }: CardContentProps) => {
   const getImageSource = () => {
-    if (!overlayImage) return null;
+    if (!overlayImage) return null
     if (typeof overlayImage === 'string') {
-      return { uri: overlayImage };
+      return { uri: overlayImage }
     }
-    return overlayImage;
-  };
+    return overlayImage
+  }
   return (
     <View style={styles.card}>
       <View style={styles.imageContainer}>
@@ -26,8 +26,8 @@ export const CardContent = ({ overlayImage = null, children }: CardContentProps)
         {children && <View style={styles.content}>{children}</View>}
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   card: {
@@ -73,4 +73,4 @@ const styles = StyleSheet.create({
     right: 0,
     padding: 12,
   },
-});
+})

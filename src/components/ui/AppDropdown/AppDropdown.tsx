@@ -1,5 +1,5 @@
-import { AppText } from '@/components/ui/AppText';
-import { useEffect, useRef, useState } from 'react';
+import { AppText } from '@/components/ui/AppText'
+import { useEffect, useRef, useState } from 'react'
 import {
   Animated,
   Dimensions,
@@ -9,30 +9,30 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
+} from 'react-native'
 
 interface DropdownOption {
-  label: string;
-  value: string;
+  label: string
+  value: string
 }
 
 interface Layout {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  x: number
+  y: number
+  width: number
+  height: number
 }
 
 interface AppDropdownProps {
-  label: string;
-  placeholder?: string;
-  options: Record<string, string> | readonly DropdownOption[];
-  value?: string;
-  onChange: (value: string) => void;
+  label: string
+  placeholder?: string
+  options: Record<string, string> | readonly DropdownOption[]
+  value?: string
+  onChange: (value: string) => void
 }
 
-const ACCENT = '#DFD4C2';
-const TEXT = '#212529';
+const ACCENT = '#DFD4C2'
+const TEXT = '#212529'
 
 export default function AppDropdown({
   label,
@@ -41,48 +41,48 @@ export default function AppDropdown({
   value,
   onChange,
 }: AppDropdownProps) {
-  const [open, setOpen] = useState(false);
-  const [layout, setLayout] = useState<Layout | null>(null);
-  const ref = useRef<View>(null);
-  const anim = useRef(new Animated.Value(0)).current;
+  const [open, setOpen] = useState(false)
+  const [layout, setLayout] = useState<Layout | null>(null)
+  const ref = useRef<View>(null)
+  const anim = useRef(new Animated.Value(0)).current
   const optionsArray = Array.isArray(options)
     ? options
-    : Object.entries(options).map(([label, value]) => ({ label, value }));
-  const selected = optionsArray.find((o) => o.value === value);
-  const topDistance = 4;
+    : Object.entries(options).map(([label, value]) => ({ label, value }))
+  const selected = optionsArray.find((o) => o.value === value)
+  const topDistance = 4
   useEffect(() => {
-    const sub = Dimensions.addEventListener('change', () => setOpen(false));
-    return () => sub.remove();
-  }, []);
+    const sub = Dimensions.addEventListener('change', () => setOpen(false))
+    return () => sub.remove()
+  }, [])
 
   const toggle = () => {
     ref.current?.measureInWindow((x, y, width, height) => {
-      setLayout({ x, y, width, height });
+      setLayout({ x, y, width, height })
 
-      const toValue = open ? 0 : 1;
-      if (!open) anim.setValue(0);
+      const toValue = open ? 0 : 1
+      if (!open) anim.setValue(0)
 
-      setOpen(true);
+      setOpen(true)
       Animated.timing(anim, {
         toValue,
         duration: open ? 140 : 180,
         useNativeDriver: true,
       }).start(() => {
-        if (toValue === 0) setOpen(false);
-      });
-    });
-  };
+        if (toValue === 0) setOpen(false)
+      })
+    })
+  }
 
   return (
     <View ref={ref} style={styles.container}>
-      <AppText variant="body" color={TEXT}>
+      <AppText variant='body' color={TEXT}>
         {label}
       </AppText>
 
       <TouchableOpacity style={styles.input} onPress={toggle}>
         <AppText>{selected?.label || placeholder}</AppText>
 
-        <AppText variant="body">{open ? '▴' : '▾'}</AppText>
+        <AppText variant='body'>{open ? '▴' : '▾'}</AppText>
       </TouchableOpacity>
 
       {open && layout && (
@@ -117,11 +117,11 @@ export default function AppDropdown({
                 <TouchableOpacity
                   style={[styles.item, item.value === value && styles.selected]}
                   onPress={() => {
-                    onChange(item.value);
-                    toggle();
+                    onChange(item.value)
+                    toggle()
                   }}
                 >
-                  <AppText variant="body">{item.label}</AppText>
+                  <AppText variant='body'>{item.label}</AppText>
                 </TouchableOpacity>
               )}
             />
@@ -129,7 +129,7 @@ export default function AppDropdown({
         </Modal>
       )}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -161,4 +161,4 @@ const styles = StyleSheet.create({
     borderBottomColor: '#d8cab3',
   },
   selected: { backgroundColor: '#eadfcf' },
-});
+})

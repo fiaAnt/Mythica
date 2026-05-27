@@ -1,26 +1,26 @@
-import { AppText } from '@/components/ui/AppText';
-import moon from '@assets/images/moon.png';
-import sun from '@assets/images/sun.png';
-import { router } from 'expo-router';
-import React, { useState } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { AppText } from '@/components/ui/AppText'
+import moon from '@assets/images/moon.png'
+import sun from '@assets/images/sun.png'
+import { router } from 'expo-router'
+import React, { useState } from 'react'
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 
 interface BarProps {
-  path: string;
-  title: string;
-  icon: string;
+  path: string
+  title: string
+  icon: string
 }
 
 export const Bar = ({ path, icon, title }: BarProps) => {
-  const [isDay, setIsDay] = useState(false);
+  const [isDay, setIsDay] = useState(false)
 
   const handleUserPress = () => {
-    router.push(`${path}`);
-  };
+    router.push(`${path}`)
+  }
 
   const handleToggleDayNight = () => {
-    setIsDay(!isDay);
-  };
+    setIsDay(!isDay)
+  }
 
   return (
     <View style={styles.container}>
@@ -29,15 +29,15 @@ export const Bar = ({ path, icon, title }: BarProps) => {
           <Image source={icon} style={styles.avatar} />
         </TouchableOpacity>
 
-        <AppText variant="title">{title}</AppText>
+        <AppText variant='title'>{title}</AppText>
       </View>
 
       <TouchableOpacity onPress={handleToggleDayNight}>
         <Image source={isDay ? sun : moon} style={styles.icon} />
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -60,4 +60,4 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
   },
-});
+})

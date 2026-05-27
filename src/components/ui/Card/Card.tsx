@@ -1,10 +1,10 @@
-import { ImageSourcePropType, TouchableOpacity } from 'react-native';
-import { CardContent } from '../CardContent';
+import { ImageSourcePropType, TouchableOpacity } from 'react-native'
+import { CardContent } from '../CardContent'
 
 interface CardProps {
-  overlayImage?: ImageSourcePropType | string | null;
-  onPress?: () => void;
-  children?: React.ReactNode;
+  overlayImage?: ImageSourcePropType | string | null
+  onPress?: () => void
+  children?: React.ReactNode
 }
 
 export const Card = ({ onPress }: CardProps) => {
@@ -13,8 +13,8 @@ export const Card = ({ onPress }: CardProps) => {
       <TouchableOpacity onPress={onPress}>
         <CardContent />
       </TouchableOpacity>
-    );
+    )
   }
 
-  return <CardContent />;
-};
+  return <CardContent />
+}

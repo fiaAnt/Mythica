@@ -1,1 +1,1 @@
-export { default as AppDropdown } from './AppDropdown';
+export { default as AppDropdown } from './AppDropdown'
