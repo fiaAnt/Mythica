@@ -1,4 +1,4 @@
-import card from '@assets/images/card.png'
+import card from '@/assets/images/card.png'
 import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native'
 
 interface CardContentProps {

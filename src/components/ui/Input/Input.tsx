@@ -1,5 +1,5 @@
+import searchIcon from '@/assets/images/search.png'
 import { AppText } from '@/components/ui/AppText'
-import searchIcon from '@assets/images/search.png'
 import { Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 
 interface InputProps {

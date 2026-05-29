@@ -1,6 +1,6 @@
+import moon from '@/assets/images/moon.png'
+import sun from '@/assets/images/sun.png'
 import { AppText } from '@/components/ui/AppText'
-import moon from '@assets/images/moon.png'
-import sun from '@assets/images/sun.png'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'

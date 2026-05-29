@@ -1,9 +1,9 @@
+import afina from '@/assets/images/afina.png'
 import { AppDropdown } from '@/components/ui/AppDropdown'
 import { AppText } from '@/components/ui/AppText'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
-import afina from '@assets/images/afina.png'
 import React, { useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native'
 
