@@ -9,11 +9,10 @@ import { Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } f
 import { Icon } from '../ui/Icon'
 
 interface MenuProps {
-  onThemeToggle: () => void
   onFiltersApply: (mythology: string | undefined, type: string | undefined) => void
 }
 
-export const Menu = ({ onThemeToggle, onFiltersApply }: MenuProps) => {
+export const Menu = ({ onFiltersApply }: MenuProps) => {
   const { colors, spacing, shadow, borderRadius } = useTheme()
   const { t } = useTranslation()
   const styles = useMemo(
@@ -85,11 +84,7 @@ export const Menu = ({ onThemeToggle, onFiltersApply }: MenuProps) => {
         setSelectedType={setSelectedType}
       />
 
-      <ThemeModal
-        visible={themeVisible}
-        onClose={() => setThemeVisible(false)}
-        onThemeToggle={onThemeToggle}
-      />
+      <ThemeModal visible={themeVisible} onClose={() => setThemeVisible(false)} />
     </>
   )
 }
@@ -107,7 +102,6 @@ const createStyles = ({ colors, spacing, shadow, borderRadius }: MenuStylesProps
       right: spacing['space-xl'],
       borderRadius: borderRadius['border-lg'],
       padding: spacing['space-sm'],
-      minWidth: 140,
       ...shadow['light'],
       zIndex: 999,
     },

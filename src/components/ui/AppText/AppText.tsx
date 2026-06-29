@@ -5,8 +5,8 @@ import { useMemo } from 'react'
 import { StyleSheet, Text, TextStyle } from 'react-native'
 
 interface AppTextProps {
-  children: string | string[]
-  variant?: 'title' | 'subtitle' | 'body' | 'small'
+  children: React.ReactNode
+  variant?: 'title' | 'subtitle' | 'body' | 'note' | 'small'
   color?: ThemeColor | string
   align?: 'left' | 'center' | 'right'
   style?: TextStyle
@@ -21,7 +21,7 @@ export const AppText = ({
 }: AppTextProps) => {
   const { colors, typography } = useTheme()
   const styles = useMemo(() => createStyles({ colors, typography }), [colors, typography])
-
+  const content = children instanceof Error ? children.message : children
   return (
     <Text
       style={[
@@ -33,7 +33,7 @@ export const AppText = ({
         style,
       ]}
     >
-      {children}
+      {content}
     </Text>
   )
 }
@@ -42,14 +42,15 @@ const createStyles = ({ typography }: TextStylesProps) =>
   StyleSheet.create({
     title: {
       fontSize: typography['font-size-lg'],
-      fontFamily: 'Georgia',
       fontWeight: 'bold',
     },
     subtitle: {
       fontSize: typography['font-size-md'],
-      fontFamily: 'Georgia',
     },
     body: {
+      fontSize: typography['font-size-sm'],
+    },
+    note: {
       fontSize: typography['font-size-sm'],
     },
     small: {

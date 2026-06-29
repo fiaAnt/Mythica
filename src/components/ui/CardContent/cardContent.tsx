@@ -1,4 +1,7 @@
-import React from 'react'
+import { CARD_ASPECT_RATIO } from '@/constants/sizes'
+import { ThemeContextValue } from '@/context/themeContext'
+import { useTheme } from '@/hooks/useTheme'
+import React, { useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import CardBackground from '../../../../assets/images/card.svg'
 
@@ -8,10 +11,15 @@ interface CardContentProps {
 }
 
 export const CardContent = ({ overlayImage, children }: CardContentProps) => {
+  const { spacing, shadow, borderRadius } = useTheme()
+  const styles = useMemo(
+    () => createStyles({ spacing, shadow, borderRadius }),
+    [spacing, shadow, borderRadius],
+  )
   return (
     <View style={styles.card}>
       <View style={styles.imageContainer}>
-        <CardBackground />
+        <CardBackground width='100%' height='100%' />
         {overlayImage && <View style={styles.overlayContainer}>{overlayImage}</View>}
 
         {children && <View style={styles.content}>{children}</View>}
@@ -19,36 +27,30 @@ export const CardContent = ({ overlayImage, children }: CardContentProps) => {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  card: {
-    width: 200,
-    height: 320,
-    margin: 10,
-    overflow: 'hidden',
-    borderRadius: 12,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  imageContainer: {
-    position: 'relative',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  overlayContainer: {
-    position: 'absolute',
-    top: 30,
-    alignSelf: 'center',
-    zIndex: 10,
-  },
-  content: {
-    position: 'absolute',
-    bottom: 10,
-    left: 0,
-    right: 0,
-    padding: 12,
-  },
-})
+type CardContentStylesProps = Pick<ThemeContextValue, 'spacing' | 'shadow' | 'borderRadius'>
+const createStyles = ({ spacing, shadow, borderRadius }: CardContentStylesProps) =>
+  StyleSheet.create({
+    card: {
+      overflow: 'hidden',
+      borderRadius: borderRadius['border-xxl'],
+      ...shadow['medium'],
+      aspectRatio: CARD_ASPECT_RATIO,
+    },
+    imageContainer: {
+      position: 'relative',
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    overlayContainer: {
+      position: 'absolute',
+      top: spacing['space-xxl'],
+      alignSelf: 'center',
+      zIndex: 10,
+    },
+    content: {
+      position: 'absolute',
+      bottom: spacing['space-sm'],
+      padding: spacing['space-md'],
+    },
+  })

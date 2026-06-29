@@ -13,16 +13,15 @@ interface InputProps {
 }
 
 export const Input = ({
-  placeholder = 'Поиск...',
+  placeholder = '...',
   value = '',
   onChangeText = () => {},
   onSearch = () => {},
 }: InputProps) => {
-  const { colors, spacing, borderRadius } = useTheme()
-
+  const { borderRadius, spacing, colors } = useTheme()
   const styles = useMemo(
-    () => createStyles({ colors, spacing, borderRadius }),
-    [colors, spacing, borderRadius],
+    () => createStyles({ borderRadius, spacing, colors }),
+    [borderRadius, spacing, colors],
   )
   return (
     <View style={styles.container}>

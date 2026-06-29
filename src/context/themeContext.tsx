@@ -14,14 +14,6 @@ export const Themes = {
 
 export type Theme = (typeof Themes)[keyof typeof Themes]
 
-export const ThemePreferences = {
-  Dark: 'dark',
-  Light: 'light',
-  System: 'system',
-} as const
-
-export type ThemePreference = (typeof ThemePreferences)[keyof typeof ThemePreferences]
-
 type ThemeColorsType = typeof LIGHT_COLORS
 
 const COLORS_BY_THEME: Record<Theme, ThemeColorsType> = {
@@ -29,12 +21,12 @@ const COLORS_BY_THEME: Record<Theme, ThemeColorsType> = {
   [Themes.Light]: LIGHT_COLORS,
 } as const
 
-function isValidThemePreference(preference: unknown): preference is ThemePreference {
-  return Object.values(ThemePreferences).includes(preference as ThemePreference)
+function isValidThemePreference(preference: unknown): preference is Theme {
+  return Object.values(Themes).includes(preference as Theme)
 }
 
-function resolveTheme(userPreference: ThemePreference, systemScheme: ColorSchemeName): Theme {
-  if (userPreference !== ThemePreferences.System) {
+function resolveTheme(userPreference: Theme, systemScheme: ColorSchemeName): Theme {
+  if (userPreference !== Themes.Light) {
     return userPreference
   }
 
@@ -52,7 +44,7 @@ export interface ThemeContextValue {
   spacing: typeof SPACING
   borderRadius: typeof BORDER_RADIUS
   shadow: typeof SHADOW
-  setThemePreference: (themePreference: ThemePreference) => void
+  setThemePreference: (themePreference: Theme) => void
 }
 
 export const ThemeContext = createContext<ThemeContextValue | null>(null)
@@ -62,15 +54,15 @@ export interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [themePreference, setThemePreferenceInternal] = useState<ThemePreference>(() => {
+  const [themePreference, setThemePreferenceInternal] = useState<Theme>(() => {
     const savedPreference = getThemePreference()
-    return isValidThemePreference(savedPreference) ? savedPreference : ThemePreferences.System
+    return isValidThemePreference(savedPreference) ? savedPreference : Themes.Light
   })
 
   const systemScheme = useColorScheme()
   const theme = resolveTheme(themePreference, systemScheme)
 
-  const updateThemePreference = useCallback((newPreference: ThemePreference) => {
+  const updateThemePreference = useCallback((newPreference: Theme) => {
     setThemePreferenceInternal(newPreference)
     setThemePreference(newPreference)
   }, [])
@@ -90,4 +82,3 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>
 }
-

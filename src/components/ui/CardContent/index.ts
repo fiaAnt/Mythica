@@ -1,1 +1,2 @@
-export { CardContent } from './cardContent'
+export { CardContent } from './cardContent';
+

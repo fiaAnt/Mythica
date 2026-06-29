@@ -6,8 +6,9 @@ import { ThemeContextValue } from '@/context/themeContext'
 import { useTheme } from '@/hooks/useTheme'
 import { router } from 'expo-router'
 import React, { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 type TabId = 'unexplored' | 'favorites'
 
@@ -25,21 +26,22 @@ export default function ProfileScreen() {
   const insets = useSafeAreaInsets()
   const [selectedTab, setSelectedTab] = useState<TabId>('unexplored')
   const { colors, spacing, borderRadius } = useTheme()
+  const { t } = useTranslation()
   const styles = useMemo(
     () => createStyles({ colors, spacing, borderRadius }),
     [colors, spacing, borderRadius],
   )
 
   return (
-    <View style={[styles.container]}>
+    <SafeAreaView style={styles.container}>
       <Bar title='Profile' leftIcon='back' onLeftPress={() => router.back()} />
 
       <View style={styles.userInformation}>
-        <Icon name='user' color={colors['icon-primary']} size='xl' />
+        <Icon name='user' color='icon-primary' size='xl' />
         <View style={styles.loadings}>
-          <AppText variant='small'>загрузка 1</AppText>
-          <AppText variant='small'>загрузка 2</AppText>
-          <AppText variant='small'>загрузка 3</AppText>
+          <AppText variant='small'>{t('loading_1')}</AppText>
+          <AppText variant='small'>{t('loading_2')}</AppText>
+          <AppText variant='small'>{t('loading_3')}</AppText>
         </View>
       </View>
 
@@ -49,7 +51,7 @@ export default function ProfileScreen() {
 
       <View style={styles.achievements}>
         <AppText variant='body'>Achievements</AppText>
-        <AppText variant='small'>You do not have any achievements yet</AppText>
+        <AppText variant='small'>{t('no_achievements')}</AppText>
       </View>
 
       <View style={styles.choose}>
@@ -67,6 +69,7 @@ export default function ProfileScreen() {
               >
                 {tab.label}
               </AppText>
+
               {isSelected && <View style={styles.underline} />}
             </TouchableOpacity>
           )
@@ -74,16 +77,21 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.card}>
-        {selectedTab === 'unexplored' && <AppText>Unexplored content goes here</AppText>}
-        {selectedTab === 'favorites' && <AppText>Favorites content goes here</AppText>}
+        {selectedTab === 'unexplored' && <AppText>{t('unexplored_content')}</AppText>}
+
+        {selectedTab === 'favorites' && <AppText>{t('favorites_content')}</AppText>}
       </View>
-    </View>
+    </SafeAreaView>
   )
 }
 
 const createStyles = ({ colors, spacing, borderRadius }: ThemeContextValue) =>
   StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors['background-primary'] },
+    container: {
+      flex: 1,
+      paddingHorizontal: spacing['space-xl'],
+      backgroundColor: colors['background-primary'],
+    },
     userInformation: {
       marginVertical: spacing['space-xl'],
       paddingHorizontal: spacing['space-lg'],
