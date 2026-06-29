@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "301120116814",
+    "project_id": "mythica-ef3d1",
+    "storage_bucket": "mythica-ef3d1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301120116814:android:f484ab4ca2481bd3878b1f",
+        "android_client_info": {
+          "package_name": "com.anonymous.Mythica"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVivEsRb-YxrI9umspe6r8TpzCYrh1MSg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
