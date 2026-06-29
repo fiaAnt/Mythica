@@ -8,14 +8,13 @@ import CardBackground from '../../../../assets/images/card.svg'
 interface CardContentProps {
   overlayImage?: React.ReactNode
   children?: React.ReactNode
+  cardWidth?: number
 }
 
-export const CardContent = ({ overlayImage, children }: CardContentProps) => {
-  const { spacing, shadow, borderRadius } = useTheme()
-  const styles = useMemo(
-    () => createStyles({ spacing, shadow, borderRadius }),
-    [spacing, shadow, borderRadius],
-  )
+export const CardContent = ({ overlayImage, children, cardWidth }: CardContentProps) => {
+  const { spacing } = useTheme()
+  const styles = useMemo(() => createStyles({ spacing }), [spacing])
+
   return (
     <View style={[styles.card, { width: cardWidth }]}>
       <View style={styles.imageContainer}>

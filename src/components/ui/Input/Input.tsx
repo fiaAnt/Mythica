@@ -1,4 +1,5 @@
 import { AppText } from '@/components/ui/AppText'
+import { IconToken } from '@/constants/icons'
 import { ThemeContextValue } from '@/context/themeContext'
 import { useTheme } from '@/hooks/useTheme'
 import { useMemo } from 'react'
@@ -8,6 +9,7 @@ import { Icon } from '../Icon'
 interface InputProps {
   placeholder: string
   value?: string
+  icon: IconToken
   onChangeText?: (text: string) => void
   onSearch?: () => void
 }
@@ -15,6 +17,7 @@ interface InputProps {
 export const Input = ({
   placeholder = '...',
   value = '',
+  icon = 'search',
   onChangeText = () => {},
   onSearch = () => {},
 }: InputProps) => {
@@ -25,7 +28,7 @@ export const Input = ({
   )
   return (
     <View style={styles.container}>
-      <Icon name='search' color='icon-secondary' size='md' />
+      <Icon name={icon} color='icon-secondary' size='md' />
       <TextInput
         placeholder={placeholder}
         value={value}

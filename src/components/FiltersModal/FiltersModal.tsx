@@ -3,9 +3,9 @@ import { AppDropdown } from '@/components/ui/AppDropdown'
 import { AppText } from '@/components/ui/AppText'
 import { Button } from '@/components/ui/Button'
 import { ThemeContextValue } from '@/context/themeContext'
+import { useFilters } from '@/hooks/useFilters'
 import { useTheme } from '@/hooks/useTheme'
-import { getFilters } from '@/services/filtersService'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Icon } from '../ui/Icon'
@@ -41,27 +41,13 @@ export const FiltersModal = ({
   )
   const { t, i18n } = useTranslation()
 
-  const [filterOptions, setFilterOptions] = useState<FilterData>({
-    mythologies: [],
-    types: [],
-  })
+  const { filters } = useFilters(i18n.language)
   const [isEnabled, setIsEnabled] = useState(false)
-
-  useEffect(() => {
-    if (visible) {
-      getFilters(i18n.language)
-        .then((data) => {
-          if (data) {
-            setFilterOptions(data)
-          }
-        })
-        .catch((err) => console.error('Failed to fetch filters:', err))
-    }
-  }, [visible, i18n.language])
 
   const handleReset = () => {
     setSelectedMythology(undefined)
     setSelectedType(undefined)
+    setIsEnabled(false)
   }
 
   const handleApply = () => {
@@ -89,14 +75,14 @@ export const FiltersModal = ({
             <AppDropdown
               label={t('mythology')}
               placeholder={t('select_mythology')}
-              options={filterOptions.mythologies}
+              options={filters.mythologies}
               value={selectedMythology}
               onChange={setSelectedMythology}
             />
             <AppDropdown
               label={t('type')}
               placeholder={t('select_type')}
-              options={filterOptions.types}
+              options={filters.types}
               value={selectedType}
               onChange={setSelectedType}
             />

@@ -1,10 +1,10 @@
 const ru = {
-  mythology: [
+  mythologies: [
     { label: 'Греческая', value: 'greek' },
     { label: 'Скандинавская', value: 'norse' },
     { label: 'Египетская', value: 'egyptian' },
   ],
-  type: [
+  types: [
     { label: 'Бог', value: 'god' },
     { label: 'Герой', value: 'hero' },
     { label: 'Существо', value: 'beast' },
@@ -12,18 +12,18 @@ const ru = {
 }
 
 const en = {
-  mythology: [
+  mythologies: [
     { label: 'Greek', value: 'greek' },
     { label: 'Norse', value: 'norse' },
     { label: 'Egyptian', value: 'egyptian' },
   ],
-  type: [
+  types: [
     { label: 'God', value: 'god' },
     { label: 'Hero', value: 'hero' },
     { label: 'Beast', value: 'beast' },
   ],
 }
 
-export const getFilters = (language: string) => {
+export const fetchLocalFilters = (language: string) => {
   return language === 'ru' ? ru : en
 }

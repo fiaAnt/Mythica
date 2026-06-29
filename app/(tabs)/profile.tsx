@@ -1,56 +1,53 @@
+import { Toggle } from '@/components/Toggle'
 import { AppText } from '@/components/ui/AppText'
 import { Bar } from '@/components/ui/Bar'
-import { Icon } from '@/components/ui/Icon'
+import { UserInfo } from '@/components/ui/profile/UserInfo'
 import { CARD_MIN_HEIGHT, UNDERLINE_HEIGHT } from '@/constants/sizes'
 import { ThemeContextValue } from '@/context/themeContext'
 import { useTheme } from '@/hooks/useTheme'
+import { changeLanguage } from '@/i18n'
 import { router } from 'expo-router'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
-type TabId = 'unexplored' | 'favorites'
+type TabId = 'explored' | 'favorites'
 
 interface Tab {
   id: TabId
   label: string
 }
 
-const TABS: Tab[] = [
-  { id: 'unexplored', label: 'Unexplored' },
-  { id: 'favorites', label: 'Favorites' },
-]
-
 export default function ProfileScreen() {
-  const insets = useSafeAreaInsets()
-  const [selectedTab, setSelectedTab] = useState<TabId>('unexplored')
+  const [selectedTab, setSelectedTab] = useState<TabId>('explored')
   const { colors, spacing, borderRadius } = useTheme()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const styles = useMemo(
     () => createStyles({ colors, spacing, borderRadius }),
     [colors, spacing, borderRadius],
   )
+  const TABS: Tab[] = [
+    { id: 'explored', label: t('explored') },
+    { id: 'favorites', label: t('favorites') },
+  ]
 
   return (
     <SafeAreaView style={styles.container}>
       <Bar title='Profile' leftIcon='back' onLeftPress={() => router.back()} />
 
-      <View style={styles.userInformation}>
-        <Icon name='user' color='icon-primary' size='xl' />
-        <View style={styles.loadings}>
-          <AppText variant='small'>{t('loading_1')}</AppText>
-          <AppText variant='small'>{t('loading_2')}</AppText>
-          <AppText variant='small'>{t('loading_3')}</AppText>
-        </View>
-      </View>
+      <UserInfo />
 
-      <View style={styles.name}>
-        <AppText variant='body'>Name Lastname</AppText>
-      </View>
+      <Toggle
+        label={t('language')}
+        value={i18n.language === 'ru'}
+        onToggle={(newValue) => {
+          changeLanguage(newValue ? 'ru' : 'en')
+        }}
+      />
 
       <View style={styles.achievements}>
-        <AppText variant='body'>Achievements</AppText>
+        <AppText variant='body'>{t('achievements')}</AppText>
         <AppText variant='small'>{t('no_achievements')}</AppText>
       </View>
 
@@ -78,7 +75,7 @@ export default function ProfileScreen() {
       </View>
 
       <View style={styles.card}>
-        {selectedTab === 'unexplored' && <AppText>{t('unexplored_content')}</AppText>}
+        {selectedTab === 'explored' && <AppText>{t('explored_content')}</AppText>}
 
         {selectedTab === 'favorites' && <AppText>{t('favorites_content')}</AppText>}
       </View>
@@ -90,7 +87,6 @@ const createStyles = ({ colors, spacing, borderRadius }: ThemeContextValue) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      paddingHorizontal: spacing['space-xl'],
       backgroundColor: colors['background-primary'],
     },
     userInformation: {
@@ -119,6 +115,7 @@ const createStyles = ({ colors, spacing, borderRadius }: ThemeContextValue) =>
     choose: {
       flexDirection: 'row',
       justifyContent: 'space-around',
+      paddingHorizontal: spacing['space-xl'],
       alignItems: 'center',
       marginVertical: spacing['space-xl'],
     },
@@ -138,6 +135,7 @@ const createStyles = ({ colors, spacing, borderRadius }: ThemeContextValue) =>
       position: 'absolute',
       bottom: -spacing['space-sm'],
       height: UNDERLINE_HEIGHT,
+      width: '100%',
       backgroundColor: colors['background-selected'],
       borderRadius: borderRadius['border-xs'],
     },

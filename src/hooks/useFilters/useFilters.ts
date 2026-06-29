@@ -1,4 +1,4 @@
-import { getFilters } from '@/services/filtersService'
+import { fetchLocalFilters } from '@/translations/filters'
 import { useQuery } from '@tanstack/react-query'
 
 export const useFilters = (language = 'ru') => {
@@ -8,7 +8,8 @@ export const useFilters = (language = 'ru') => {
     error,
   } = useQuery({
     queryKey: ['filters', language],
-    queryFn: () => getFilters(language),
+    queryFn: () => fetchLocalFilters(language),
+    initialData: { mythologies: [], types: [] },
   })
 
   return {
@@ -17,4 +18,3 @@ export const useFilters = (language = 'ru') => {
     error,
   }
 }
-

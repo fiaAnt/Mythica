@@ -16,6 +16,7 @@ export const IconTokens = {
   Filters: 'filters',
   Card: 'card',
   Menu: 'menu',
+  Filters: 'filters',
   Pen: 'pen',
 } as const
 

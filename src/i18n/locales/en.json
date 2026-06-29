@@ -17,6 +17,10 @@
   "close": "Close",
   "apply": "Apply",
 
+  "theme": "Theme",
+  "light_theme": "Light theme",
+  "dark_theme": "Dark theme",
+
   "character_title": "Character",
   "common_back": "Back",
 
@@ -27,9 +31,9 @@
   "name_lastname": "Name Lastname",
   "achievements": "Achievements",
   "no_achievements": "You have no achievements yet",
-  "unexplored": "Unexplored",
+  "explored": "Explored",
   "favorites": "Favorites",
-  "unexplored_content": "Unexplored content goes here",
+  "explored_content": "Explored content goes here",
   "favorites_content": "Favorites content goes here",
 
   "characterError": "Character not found",

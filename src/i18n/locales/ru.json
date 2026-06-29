@@ -17,6 +17,10 @@
   "close": "Закрыть",
   "apply": "Применить",
 
+  "theme": "Тема",
+  "light_theme": "Светлая тема",
+  "dark_theme": "Тёмная тема",
+
   "character_title": "Персонаж",
   "common_back": "Назад",
 
@@ -27,9 +31,9 @@
   "name_lastname": "Имя Фамилия",
   "achievements": "Достижения",
   "no_achievements": "У вас пока нет достижений",
-  "unexplored": "Неизведанное",
+  "explored": "Изученное",
   "favorites": "Избранное",
-  "unexplored_content": "Здесь будет неизведанный контент",
+  "explored_content": "Здесь будет изученный контент",
   "favorites_content": "Здесь будет избранный контент",
   "characterError": "Персонаж не найден",
   "funFact": "Интересные факты:",

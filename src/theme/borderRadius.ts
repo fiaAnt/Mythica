@@ -4,5 +4,4 @@ export const BORDER_RADIUS = {
   'border-md': 8,
   'border-lg': 12,
   'border-xl': 16,
-  'border-xxl': 20,
 } as const
