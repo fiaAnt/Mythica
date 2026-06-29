@@ -1,23 +1,39 @@
-import { ICONS_BY_TOKEN, IconSize, IconSizes, IconToken } from '@/constants/icons'
+import { IconSize, IconSizes } from '@/constants/icons'
 import { useTheme } from '@/hooks/useTheme'
-import { ThemeColor } from '@/theme/colors'
+import { getIcon } from '@/services/cloudinaryService'
+import React, { useMemo } from 'react'
+import { Image, StyleSheet } from 'react-native'
 
 export interface IconProps {
-  color: ThemeColor | string
-  name: IconToken
+  name: string
   size: IconSize
 }
 
-export const Icon: React.FC<IconProps> = ({ color, name, size }) => {
-  const { colors } = useTheme()
+export const Icon: React.FC<IconProps> = ({ name, size }) => {
+  const { theme } = useTheme()
 
-  const IconComponent = ICONS_BY_TOKEN[name]
+  const normTheme = useMemo(() => String(theme).toLowerCase() as 'dark' | 'light', [theme])
 
-  const iconColor = color ? (colors[color as ThemeColor] ?? color) : colors['icon-primary']
+  const iconSource = useMemo(() => getIcon(name, normTheme), [name, normTheme])
 
-  if (!IconComponent) {
-    console.warn(`Icon "${name}" not found`)
-    return null
-  }
-  return <IconComponent color={iconColor} width={IconSizes[size]} height={IconSizes[size]} />
+  const pixelSize = IconSizes[size]
+
+  return (
+    <Image
+      source={iconSource}
+      style={[
+        styles.icon,
+        {
+          width: pixelSize,
+          height: pixelSize,
+        },
+      ]}
+    />
+  )
 }
+
+const styles = StyleSheet.create({
+  icon: {
+    resizeMode: 'contain',
+  },
+})

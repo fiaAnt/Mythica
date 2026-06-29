@@ -1,41 +1,43 @@
 import { CardContent } from '@/components/ui/CardContent'
-import { getCharacterImage } from '@/utils/characterImages'
+import { CARD_MIN_HEIGHT } from '@/constants/sizes'
+import { getCharacterImage } from '@/services/cloudinaryService'
 import { router } from 'expo-router'
-import React from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import React, { useMemo } from 'react'
+import { TouchableOpacity } from 'react-native'
 
 interface CardProps {
+  characterId: string
   characterName?: string
   onPress?: () => void
   children?: React.ReactNode
   cardWidth?: number
 }
 
-export const Card: React.FC<CardProps> = ({ characterName, onPress, children, cardWidth }) => {
-  const overlayImage = characterName ? getCharacterImage(characterName) : null
+export const Card: React.FC<CardProps> = ({
+  characterId,
+  characterName,
+  onPress,
+  children,
+  cardWidth = CARD_MIN_HEIGHT,
+}) => {
+  const overlayImage = useMemo(() => {
+    if (!characterId) return null
+    const img = getCharacterImage(characterId)
+
+    return img
+  }, [characterId])
 
   const handleCharacterPress = () => {
-    if (!characterName) return
-    router.push(`/character/${characterName}`)
+    if (!characterId) return
+    router.push(`/character/${characterId}`)
     onPress?.()
   }
 
   return (
-    <TouchableOpacity
-      onPress={handleCharacterPress}
-      style={styles.touchable}
-      disabled={!characterName}
-      activeOpacity={0.8}
-    >
+    <TouchableOpacity onPress={handleCharacterPress} disabled={!characterName} activeOpacity={0.8}>
       <CardContent overlayImage={overlayImage} cardWidth={cardWidth}>
         {children}
       </CardContent>
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  touchable: {
-    width: '100%',
-  },
-})

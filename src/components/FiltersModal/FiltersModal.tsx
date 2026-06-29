@@ -65,7 +65,7 @@ export const FiltersModal = ({
           style={[styles.modalContainer, { backgroundColor: colors['background-surface-primary'] }]}
         >
           <View style={styles.header}>
-            <Icon name='filters' color='icon-primary' size='lg' />
+            <Icon name='filters' size='lg' />
             <AppText variant='title' style={{ color: colors['text-primary'] }}>
               {t('filters')}
             </AppText>

@@ -46,7 +46,7 @@ export const Menu = ({ onFiltersApply }: MenuProps) => {
   return (
     <>
       <TouchableOpacity onPress={() => setMenuVisible(true)}>
-        <Icon name='menu' color='icon-primary' size='md' />
+        <Icon name='menu' size='md' />
       </TouchableOpacity>
 
       <Modal
@@ -63,12 +63,12 @@ export const Menu = ({ onFiltersApply }: MenuProps) => {
           style={[styles.menuContainer, { backgroundColor: colors['background-surface-primary'] }]}
         >
           <TouchableOpacity style={styles.menuItem} onPress={handleOpenTheme}>
-            <Icon name='theme' color='icon-primary' size='md' />
+            <Icon name='theme' size='md' />
             <AppText style={{ color: colors['text-primary'] }}>{t('theme')}</AppText>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.menuItem} onPress={handleOpenFilters}>
-            <Icon name='filters' color='icon-primary' size='md' />
+            <Icon name='filters' size='md' />
             <AppText style={{ color: colors['text-primary'] }}>{t('filters')}</AppText>
           </TouchableOpacity>
         </View>

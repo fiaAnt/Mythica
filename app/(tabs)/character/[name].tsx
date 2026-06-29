@@ -74,14 +74,14 @@ export default function CharacterScreen() {
         />
 
         <View style={[styles.card, { shadowColor: colors['overlay-50'] }]}>
-          <Card characterName={character.name}></Card>
+          <Card characterId={character.id} characterName={character.name}></Card>
         </View>
 
         <AppText variant='subtitle' align='center'>
           {character.title}
         </AppText>
 
-        <Input placeholder={t('addNote')} />
+        <Input icon={'pen'} placeholder={t('addNote')} />
 
         <AppText variant='body'>{character.description}</AppText>
 
@@ -107,6 +107,8 @@ const createStyles = ({ spacing }: CharacterStylesProps) =>
     },
     card: {
       paddingVertical: spacing['space-md'],
+      justifyContent: 'space-between',
+      alignItems: 'center',
     },
     center: {
       justifyContent: 'center',

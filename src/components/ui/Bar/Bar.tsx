@@ -1,6 +1,5 @@
 import { Menu } from '@/components/Menu'
 import { AppText } from '@/components/ui/AppText'
-import { IconToken } from '@/constants/icons'
 import { ThemeContextValue } from '@/context/themeContext'
 import { useTheme } from '@/hooks/useTheme'
 import { Href, router } from 'expo-router'
@@ -11,7 +10,7 @@ import { Icon } from '../Icon'
 interface BarProps {
   path: string
   title: string
-  leftIcon: IconToken
+  leftIcon: string
   onLeftPress?: () => void
   onFiltersApply: (mythology: string | undefined, type: string | undefined) => void
 }
@@ -32,7 +31,7 @@ export const Bar = ({ path, title, leftIcon, onLeftPress, onFiltersApply }: BarP
     <View style={styles.container}>
       <View style={styles.containerLeft}>
         <TouchableOpacity onPress={handleLeftPress}>
-          <Icon name={leftIcon} color='icon-secondary' size='lg' />
+          <Icon name={leftIcon} size='lg' />
         </TouchableOpacity>
         <AppText variant='title'>{title}</AppText>
       </View>
@@ -49,8 +48,8 @@ const createStyles = ({ spacing }: BarStylesProps) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingTop: spacing['space-sm'],
       paddingHorizontal: spacing['space-lg'],
+      paddingTop: spacing['space-sm'],
     },
     containerLeft: {
       flexDirection: 'row',

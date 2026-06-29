@@ -21,7 +21,7 @@ export const UserInfo = () => {
 
   return (
     <View style={styles.userInformation}>
-      <Icon name='user' color='icon-primary' size='lg' />
+      <Icon name='user' size='lg' />
       <View style={styles.loadings}>
         {MOCK_LOADING_DATA.map((item, index) => (
           <View key={index} style={styles.loadingItem}>
