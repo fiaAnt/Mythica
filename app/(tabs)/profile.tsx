@@ -57,6 +57,7 @@ export default function ProfileScreen() {
       <View style={styles.choose}>
         {TABS.map((tab) => {
           const isSelected = selectedTab === tab.id
+
           return (
             <TouchableOpacity
               key={tab.id}

@@ -9,9 +9,9 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from '../Icon'
 
 interface BarProps {
+  path: string
   title: string
   leftIcon: IconToken
-  path?: string
   onLeftPress?: () => void
   onFiltersApply: (mythology: string | undefined, type: string | undefined) => void
 }
@@ -41,7 +41,6 @@ export const Bar = ({ path, title, leftIcon, onLeftPress, onFiltersApply }: BarP
     </View>
   )
 }
-type BarStylesProps = Pick<ThemeContextValue, 'spacing'>
 
 type BarStylesProps = Pick<ThemeContextValue, 'spacing'>
 const createStyles = ({ spacing }: BarStylesProps) =>
@@ -51,6 +50,7 @@ const createStyles = ({ spacing }: BarStylesProps) =>
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingTop: spacing['space-sm'],
+      paddingHorizontal: spacing['space-lg'],
     },
     containerLeft: {
       flexDirection: 'row',

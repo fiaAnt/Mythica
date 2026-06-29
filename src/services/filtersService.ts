@@ -29,3 +29,4 @@ export const getFilters = async (language: string) => {
     })),
   }
 }
+

@@ -1,7 +1,7 @@
 import { AppText } from '@/components/ui/AppText'
 import { Button } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
-import { ThemeContextValue, Themes } from '@/context/themeContext'
+import { Theme, ThemeContextValue, Themes } from '@/context/themeContext'
 import { useTheme } from '@/hooks/useTheme'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,8 +21,8 @@ export const ThemeModal = ({ visible, onClose }: ThemeModalProps) => {
     [colors, spacing, borderRadius],
   )
 
-  const handleThemeSelect = () => {
-    const newTheme = theme === Themes.Light ? Themes.Dark : Themes.Light
+  const handleThemeSelect = (newTheme: Theme) => {
+    newTheme = theme === Themes.Light ? Themes.Dark : Themes.Light
     setThemePreference(newTheme)
   }
 

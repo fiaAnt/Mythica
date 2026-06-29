@@ -99,7 +99,6 @@ const createStyles = ({ colors, spacing }: HomeStylesProps) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      paddingHorizontal: spacing['space-xl'],
       backgroundColor: colors['background-primary'],
     },
     scrollContent: {

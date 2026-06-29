@@ -17,7 +17,7 @@ export const CardContent = ({ overlayImage, children }: CardContentProps) => {
     [spacing, shadow, borderRadius],
   )
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { width: cardWidth }]}>
       <View style={styles.imageContainer}>
         <CardBackground width='100%' height='100%' />
         {overlayImage && <View style={styles.overlayContainer}>{overlayImage}</View>}
@@ -27,13 +27,12 @@ export const CardContent = ({ overlayImage, children }: CardContentProps) => {
     </View>
   )
 }
-type CardContentStylesProps = Pick<ThemeContextValue, 'spacing' | 'shadow' | 'borderRadius'>
-const createStyles = ({ spacing, shadow, borderRadius }: CardContentStylesProps) =>
+
+type CardContentStylesProps = Pick<ThemeContextValue, 'spacing'>
+const createStyles = ({ spacing }: CardContentStylesProps) =>
   StyleSheet.create({
     card: {
       overflow: 'hidden',
-      borderRadius: borderRadius['border-xxl'],
-      ...shadow['medium'],
       aspectRatio: CARD_ASPECT_RATIO,
     },
     imageContainer: {
@@ -45,6 +44,8 @@ const createStyles = ({ spacing, shadow, borderRadius }: CardContentStylesProps)
     overlayContainer: {
       position: 'absolute',
       top: spacing['space-xxl'],
+      width: '70%',
+      height: '80%',
       alignSelf: 'center',
       zIndex: 10,
     },
@@ -52,5 +53,6 @@ const createStyles = ({ spacing, shadow, borderRadius }: CardContentStylesProps)
       position: 'absolute',
       bottom: spacing['space-sm'],
       padding: spacing['space-md'],
+      width: '100%',
     },
   })

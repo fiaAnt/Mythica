@@ -9,3 +9,4 @@ export const getCharacters = async (language: string): Promise<Character[]> => {
     ...doc.data(),
   })) as Character[]
 }
+

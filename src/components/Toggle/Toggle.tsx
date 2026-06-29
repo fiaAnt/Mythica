@@ -15,7 +15,7 @@ export const Toggle: React.FC<ToggleProps> = ({ label, value, onToggle }) => {
   const styles = useMemo(() => createStyles({ borderRadius, colors }), [borderRadius, colors])
   return (
     <View style={styles.switchContainer}>
-      <AppText variant='body'>Only unexplored:</AppText>
+      <AppText variant='body'>{label}</AppText>
       <Switch
         style={styles.switch}
         trackColor={{

@@ -24,7 +24,7 @@ export const CardList: React.FC<CardListProps> = ({ data, numColumns = 2, header
       ListHeaderComponent={header}
       renderItem={({ item }) => (
         <View style={[styles.cardWrapper, { width: cardWidth }]}>
-          <Card overlayImage={item.image} cardWidth={cardWidth}>
+          <Card characterName={item.name} cardWidth={cardWidth}>
             <AppText variant='body' align='center'>
               {item.title}
             </AppText>
@@ -38,6 +38,7 @@ type CardListStylesProps = Pick<ThemeContextValue, 'spacing'>
 const createStyles = ({ spacing }: CardListStylesProps) =>
   StyleSheet.create({
     container: {
+      paddingHorizontal: spacing['space-xl'],
       paddingBottom: spacing['space-xxl'],
     },
     row: {
