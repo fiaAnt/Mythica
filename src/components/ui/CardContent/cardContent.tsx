@@ -1,28 +1,19 @@
-import card from '@/assets/images/card.png'
-import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native'
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
+import CardBackground from '../../../../assets/images/card.svg'
 
 interface CardContentProps {
-  overlayImage?: ImageSourcePropType | string | null
+  overlayImage?: React.ReactNode
   children?: React.ReactNode
 }
 
-export const CardContent = ({ overlayImage = null, children }: CardContentProps) => {
-  const getImageSource = () => {
-    if (!overlayImage) return null
-    if (typeof overlayImage === 'string') {
-      return { uri: overlayImage }
-    }
-    return overlayImage
-  }
+export const CardContent = ({ overlayImage, children }: CardContentProps) => {
   return (
     <View style={styles.card}>
       <View style={styles.imageContainer}>
-        <Image source={card} style={styles.baseImage} />
-        {overlayImage && (
-          <View style={styles.overlayContainer}>
-            <Image source={getImageSource()} style={styles.overlayImage} />
-          </View>
-        )}
+        <CardBackground />
+        {overlayImage && <View style={styles.overlayContainer}>{overlayImage}</View>}
+
         {children && <View style={styles.content}>{children}</View>}
       </View>
     </View>
@@ -36,8 +27,6 @@ const styles = StyleSheet.create({
     margin: 10,
     overflow: 'hidden',
     borderRadius: 12,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -49,22 +38,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  baseImage: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-    resizeMode: 'cover',
-  },
   overlayContainer: {
     position: 'absolute',
     top: 30,
     alignSelf: 'center',
     zIndex: 10,
-  },
-  overlayImage: {
-    width: 180,
-    height: 240,
-    resizeMode: 'contain',
   },
   content: {
     position: 'absolute',

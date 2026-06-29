@@ -6,17 +6,14 @@ import { defineConfig } from 'eslint/config'
 export default defineConfig([
   expoConfig,
   {
+    files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
       prettier: prettierPlugin,
     },
   },
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
-  },
-  {
     ignores: ['.expo', 'dist', 'node_modules'],
   },
-  prettierConfig,
   {
     rules: {
       'import/no-duplicates': 'warn',
@@ -26,4 +23,5 @@ export default defineConfig([
       'react-hooks/exhaustive-deps': 'warn',
     },
   },
+  prettierConfig,
 ])

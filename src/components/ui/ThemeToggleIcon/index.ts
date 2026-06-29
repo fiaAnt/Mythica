@@ -1,0 +1,2 @@
+export { ThemeToggleIcon } from './ThemeToggleIcon';
+

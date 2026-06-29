@@ -1,9 +1,12 @@
-import back from '@/assets/images/back.png'
-import user from '@/assets/images/user.png'
 import { AppText } from '@/components/ui/AppText'
 import { Bar } from '@/components/ui/Bar'
-import React, { useState } from 'react'
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Icon } from '@/components/ui/Icon'
+import { CARD_MIN_HEIGHT, UNDERLINE_HEIGHT } from '@/constants/sizes'
+import { Theme } from '@/theme'
+import { useTheme } from '@/theme/ThemeContext'
+import { router } from 'expo-router'
+import React, { useMemo, useState } from 'react'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 type TabId = 'unexplored' | 'favorites'
@@ -21,13 +24,15 @@ const TABS: Tab[] = [
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets()
   const [selectedTab, setSelectedTab] = useState<TabId>('unexplored')
+  const { theme } = useTheme()
+  const styles = useMemo(() => createStyles(theme), [theme])
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Bar path='/' title='Profile' icon={back} />
+    <View style={[styles.container]}>
+      <Bar title='Profile' leftIcon='back' onLeftPress={() => router.back()} />
 
       <View style={styles.userInformation}>
-        <Image source={user} style={styles.avatar} />
+        <Icon name='user' color='icon-primary' size='xl' />
         <View style={styles.loadings}>
           <AppText variant='small'>загрузка 1</AppText>
           <AppText variant='small'>загрузка 2</AppText>
@@ -72,70 +77,60 @@ export default function ProfileScreen() {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-  },
-  userInformation: {
-    marginVertical: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  loadings: {
-    flexDirection: 'column',
-    gap: 5,
-  },
-  name: {
-    marginBottom: 20,
-  },
-  achievements: {
-    justifyContent: 'center',
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginVertical: 20,
-    padding: 16,
-    backgroundColor: '#DFD4C2',
-    borderRadius: 12,
-  },
-  choose: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  tabButton: {
-    alignItems: 'center',
-    position: 'relative',
-  },
-  selectedText: {
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  unselectedText: {
-    fontWeight: 'normal',
-    color: '#666',
-  },
-  underline: {
-    position: 'absolute',
-    bottom: -8,
-    width: '100%',
-    height: 2,
-    backgroundColor: '#000',
-    borderRadius: 1,
-  },
-  card: {
-    backgroundColor: '#DFD4C2',
-    width: '100%',
-    padding: 20,
-    minHeight: 100,
-  },
-})
+const createStyles = ({ colors, spacing, borderRadius }: Theme) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors['background-primary'] },
+    userInformation: {
+      marginVertical: spacing['space-xl'],
+      paddingHorizontal: spacing['space-lg'],
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    loadings: {
+      flexDirection: 'column',
+      gap: spacing['space-xs'],
+    },
+    name: {
+      marginBottom: spacing['space-xl'],
+    },
+    achievements: {
+      justifyContent: 'center',
+      flexDirection: 'column',
+      alignItems: 'center',
+      marginVertical: spacing['space-xl'],
+      padding: spacing['space-lg'],
+      backgroundColor: colors['background-surface-primary'],
+      borderRadius: borderRadius['border-lg'],
+    },
+    choose: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      marginVertical: spacing['space-xl'],
+    },
+    tabButton: {
+      alignItems: 'center',
+      position: 'relative',
+    },
+    selectedText: {
+      fontWeight: 'bold',
+      color: colors['text-primary'],
+    },
+    unselectedText: {
+      fontWeight: 'normal',
+      color: colors['text-secondary'],
+    },
+    underline: {
+      position: 'absolute',
+      bottom: -spacing['space-sm'],
+      height: UNDERLINE_HEIGHT,
+      backgroundColor: colors['background-selected'],
+      borderRadius: borderRadius['border-xs'],
+    },
+    card: {
+      backgroundColor: colors['background-surface-primary'],
+      padding: spacing['space-xl'],
+      minHeight: CARD_MIN_HEIGHT,
+    },
+  })

@@ -1,11 +1,14 @@
-import afina from '@/assets/images/afina.png'
 import { AppDropdown } from '@/components/ui/AppDropdown'
 import { AppText } from '@/components/ui/AppText'
+import { Bar } from '@/components/ui/Bar'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { Input } from '@/components/ui/Input'
-import React, { useState } from 'react'
+import { Theme } from '@/theme'
+import { useTheme } from '@/theme/ThemeContext'
+import React, { useMemo, useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native'
+import AfinaImage from '../../assets/images/afina.svg'
 
 enum Options {
   Greek = 'Greek',
@@ -24,6 +27,8 @@ export default function HomeScreen() {
   const [results, setResults] = useState('')
   const [selectedMythology, setSelectedMythology] = useState<string | undefined>()
   const [selectedType, setSelectedType] = useState<string | undefined>()
+  const { theme } = useTheme()
+  const styles = useMemo(() => createStyles(theme), [theme])
 
   const handleSearch = () => {
     setResults(`Результаты поиска: ${searchText}`)
@@ -31,6 +36,8 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Bar title='Main' leftIcon='user' path='/profile' />
+
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Input value={searchText} onChangeText={setSearchText} onSearch={handleSearch} />
 
@@ -61,7 +68,7 @@ export default function HomeScreen() {
           </AppText>
         </Card>
 
-        <Card overlayImage={afina}>
+        <Card overlayImage={<AfinaImage width={180} height={240} />}>
           <AppText variant='body' align='center'>
             Афина
           </AppText>
@@ -78,13 +85,13 @@ export default function HomeScreen() {
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  scrollContent: {
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    gap: 10,
-  },
-})
+const createStyles = ({ colors, spacing }: Theme) =>
+  StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors['background-primary'] },
+    scrollContent: {
+      alignItems: 'center',
+      paddingHorizontal: spacing['space-xl'],
+      paddingVertical: spacing['space-xl'],
+      gap: spacing['space-sm'],
+    },
+  })

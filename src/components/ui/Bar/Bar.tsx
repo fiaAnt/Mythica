@@ -1,63 +1,58 @@
-import moon from '@/assets/images/moon.png'
-import sun from '@/assets/images/sun.png'
 import { AppText } from '@/components/ui/AppText'
+import { IconToken } from '@/constants/icons'
+import { Theme } from '@/theme'
+import { useTheme } from '@/theme/ThemeContext'
 import { router } from 'expo-router'
-import React, { useState } from 'react'
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import React, { useMemo } from 'react'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Icon } from '../Icon'
 
 interface BarProps {
-  path: string
   title: string
-  icon: string
+  leftIcon: IconToken
+  path?: string
+  onLeftPress?: () => void
 }
 
-export const Bar = ({ path, icon, title }: BarProps) => {
-  const [isDay, setIsDay] = useState(false)
+export const Bar = ({ path, title, leftIcon, onLeftPress }: BarProps) => {
+  const { theme, toggleTheme } = useTheme()
+  const styles = useMemo(() => createStyles(theme), [theme])
 
-  const handleUserPress = () => {
-    router.push(`${path}`)
-  }
-
-  const handleToggleDayNight = () => {
-    setIsDay(!isDay)
+  const handleLeftPress = () => {
+    if (onLeftPress) {
+      onLeftPress()
+    } else if (path) {
+      router.push(path as any)
+    }
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.containerLeft}>
-        <TouchableOpacity onPress={handleUserPress}>
-          <Image source={icon} style={styles.avatar} />
+        <TouchableOpacity onPress={handleLeftPress}>
+          <Icon name={leftIcon} color='icon-secondary' size='md' />
         </TouchableOpacity>
 
         <AppText variant='title'>{title}</AppText>
       </View>
-
-      <TouchableOpacity onPress={handleToggleDayNight}>
-        <Image source={isDay ? sun : moon} style={styles.icon} />
+      <TouchableOpacity onPress={toggleTheme}>
+        <Icon name='theme' color='icon-secondary' size='md' />
       </TouchableOpacity>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 10,
-  },
-  containerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  icon: {
-    width: 24,
-    height: 24,
-  },
-})
+const createStyles = ({ spacing }: Theme) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingTop: spacing['space-sm'],
+      paddingHorizontal: spacing['space-lg'],
+    },
+    containerLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing['space-sm'],
+    },
+  })
