@@ -1,8 +1,8 @@
 import { AppText } from '@/components/ui/AppText'
 import { IconToken } from '@/constants/icons'
-import { Theme } from '@/theme'
-import { useTheme } from '@/theme/ThemeContext'
-import { router } from 'expo-router'
+import { ThemeContextValue } from '@/context/themeContext'
+import { useTheme } from '@/hooks/useTheme'
+import { Href, router } from 'expo-router'
 import React, { useMemo } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from '../Icon'
@@ -10,19 +10,24 @@ import { Icon } from '../Icon'
 interface BarProps {
   title: string
   leftIcon: IconToken
-  path?: string
+  path?: Href
   onLeftPress?: () => void
 }
 
 export const Bar = ({ path, title, leftIcon, onLeftPress }: BarProps) => {
-  const { theme, toggleTheme } = useTheme()
-  const styles = useMemo(() => createStyles(theme), [theme])
+  const { colors, spacing, theme, setThemePreference } = useTheme()
+
+  const styles = useMemo(() => createStyles({ spacing }), [spacing])
+
+  const handleThemePress = () => {
+    setThemePreference(theme === 'dark' ? 'light' : 'dark')
+  }
 
   const handleLeftPress = () => {
     if (onLeftPress) {
       onLeftPress()
     } else if (path) {
-      router.push(path as any)
+      router.push(path)
     }
   }
 
@@ -30,18 +35,20 @@ export const Bar = ({ path, title, leftIcon, onLeftPress }: BarProps) => {
     <View style={styles.container}>
       <View style={styles.containerLeft}>
         <TouchableOpacity onPress={handleLeftPress}>
-          <Icon name={leftIcon} color='icon-secondary' size='md' />
+          <Icon name={leftIcon} color={colors['icon-secondary']} size='md' />
         </TouchableOpacity>
 
         <AppText variant='title'>{title}</AppText>
       </View>
-      <TouchableOpacity onPress={toggleTheme}>
-        <Icon name='theme' color='icon-secondary' size='md' />
+      <TouchableOpacity onPress={handleThemePress}>
+        <Icon name='theme' color={colors['icon-secondary']} size='md' />
       </TouchableOpacity>
     </View>
   )
 }
-const createStyles = ({ spacing }: Theme) =>
+type BarStylesProps = Pick<ThemeContextValue, 'spacing'>
+
+const createStyles = ({ spacing }: BarStylesProps) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',

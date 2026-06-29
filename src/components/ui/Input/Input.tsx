@@ -1,6 +1,10 @@
 import searchIcon from '@/assets/images/search.svg'
 import { AppText } from '@/components/ui/AppText'
-import { Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import { ThemeContextValue } from '@/context/themeContext'
+import { useTheme } from '@/hooks/useTheme'
+import { useMemo } from 'react'
+import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import { Icon } from '../Icon'
 
 interface InputProps {
   placeholder: string
@@ -15,11 +19,16 @@ export const Input = ({
   onChangeText = () => {},
   onSearch = () => {},
 }: InputProps) => {
+  const { colors, spacing, borderRadius } = useTheme()
+
+  const styles = useMemo(
+    () => createStyles({ colors, spacing, borderRadius }),
+    [colors, spacing, borderRadius],
+  )
   return (
     <View style={styles.container}>
-      <Image source={searchIcon} style={styles.icon} />
+      <Icon name='search' color='icon-secondary' size='md' />
       <TextInput
-        style={styles.input}
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
@@ -34,29 +43,15 @@ export const Input = ({
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#DFD4C2',
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  icon: {
-    width: 24,
-    height: 24,
-    marginRight: 8,
-  },
-  clearIcon: {
-    width: 16,
-    height: 16,
-    marginLeft: 10,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    padding: 0,
-    margin: 0,
-  },
-})
+const createStyles = ({ colors, borderRadius, spacing }: ThemeContextValue) =>
+  StyleSheet.create({
+    container: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors['background-surface-primary'],
+      borderRadius: borderRadius['border-xl'],
+      paddingHorizontal: spacing['space-lg'],
+      paddingVertical: spacing['space-md'],
+    },
+  })

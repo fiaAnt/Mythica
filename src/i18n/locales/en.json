@@ -1,0 +1,35 @@
+{
+  "app_name": "Mythica",
+  "language": "Language",
+  "mythology": "Mythology",
+  "character": "Character",
+  "common": "Back",
+  "search": "Search...",
+  "select_mythology": "Select mythology",
+  "type": "Type",
+  "select_type": "Select type",
+  "only_explored": "Only explored",
+  "filters": "Filters",
+  "reset": "Reset",
+  "apply": "Apply",
+
+  "character_title": "Character",
+  "common_back": "Back",
+
+  "profile": "Profile",
+  "loading_1": "loading 1",
+  "loading_2": "loading 2",
+  "loading_3": "loading 3",
+  "name_lastname": "Name Lastname",
+  "achievements": "Achievements",
+  "no_achievements": "You have no achievements yet",
+  "unexplored": "Unexplored",
+  "favorites": "Favorites",
+  "unexplored_content": "Unexplored content goes here",
+  "favorites_content": "Favorites content goes here",
+
+  "characterError": "Character not found",
+  "funFact": "Fun facts:",
+  "symbols": "Symbols:",
+  "addNote": "Add note"
+}

@@ -3,13 +3,17 @@
     "name": "Mythica",
     "slug": "Mythica",
     "version": "1.0.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "orientation": "portrait",
     "icon": "./assets/images/icon.svg",
     "scheme": "mythica",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fiaant.Mythica"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,11 +23,11 @@
         "monochromeImage": "./assets/images/icon.svg"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.fiaant.Mythica"
     },
     "web": {
-      "output": "static",
-      "favicon": "./assets/images/favicon.svg"
+      "output": "static"
     },
     "plugins": [
       "expo-router",

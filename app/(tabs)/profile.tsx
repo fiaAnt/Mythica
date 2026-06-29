@@ -2,8 +2,9 @@ import { AppText } from '@/components/ui/AppText'
 import { Bar } from '@/components/ui/Bar'
 import { Icon } from '@/components/ui/Icon'
 import { CARD_MIN_HEIGHT, UNDERLINE_HEIGHT } from '@/constants/sizes'
-import { Theme } from '@/theme'
-import { useTheme } from '@/theme/ThemeContext'
+import { ThemeContextValue } from '@/context/themeContext'
+import { useTheme } from '@/hooks/useTheme'
+
 import { router } from 'expo-router'
 import React, { useMemo, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
@@ -24,15 +25,18 @@ const TABS: Tab[] = [
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets()
   const [selectedTab, setSelectedTab] = useState<TabId>('unexplored')
-  const { theme } = useTheme()
-  const styles = useMemo(() => createStyles(theme), [theme])
+  const { colors, spacing, borderRadius } = useTheme()
+  const styles = useMemo(
+    () => createStyles({ colors, spacing, borderRadius }),
+    [colors, spacing, borderRadius],
+  )
 
   return (
     <View style={[styles.container]}>
       <Bar title='Profile' leftIcon='back' onLeftPress={() => router.back()} />
 
       <View style={styles.userInformation}>
-        <Icon name='user' color='icon-primary' size='xl' />
+        <Icon name='user' color={colors['icon-primary']} size='xl' />
         <View style={styles.loadings}>
           <AppText variant='small'>загрузка 1</AppText>
           <AppText variant='small'>загрузка 2</AppText>
@@ -77,7 +81,8 @@ export default function ProfileScreen() {
     </View>
   )
 }
-const createStyles = ({ colors, spacing, borderRadius }: Theme) =>
+
+const createStyles = ({ colors, spacing, borderRadius }: ThemeContextValue) =>
   StyleSheet.create({
     container: { flex: 1, backgroundColor: colors['background-primary'] },
     userInformation: {
