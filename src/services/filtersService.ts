@@ -1,8 +1,7 @@
 import { db } from '@/firebase'
-import { collection, getDocs } from 'firebase/firestore'
 
 export const getFilters = async (language: string) => {
-  const querySnapshot = await getDocs(collection(db, `characters_${language}`))
+  const querySnapshot = await db.collection(`characters_${language}`).get()
 
   const mythologiesSet = new Set<string>()
   const typesSet = new Set<string>()
@@ -30,3 +29,4 @@ export const getFilters = async (language: string) => {
     })),
   }
 }
+

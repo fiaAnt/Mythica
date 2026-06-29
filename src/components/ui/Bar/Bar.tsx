@@ -1,3 +1,4 @@
+import { Menu } from '@/components/Menu'
 import { AppText } from '@/components/ui/AppText'
 import { IconToken } from '@/constants/icons'
 import { ThemeContextValue } from '@/context/themeContext'
@@ -10,24 +11,20 @@ import { Icon } from '../Icon'
 interface BarProps {
   title: string
   leftIcon: IconToken
-  path?: Href
+  path?: string
   onLeftPress?: () => void
+  onFiltersApply: (mythology: string | undefined, type: string | undefined) => void
 }
 
-export const Bar = ({ path, title, leftIcon, onLeftPress }: BarProps) => {
-  const { colors, spacing, theme, setThemePreference } = useTheme()
-
+export const Bar = ({ path, title, leftIcon, onLeftPress, onFiltersApply }: BarProps) => {
+  const { spacing } = useTheme()
   const styles = useMemo(() => createStyles({ spacing }), [spacing])
-
-  const handleThemePress = () => {
-    setThemePreference(theme === 'dark' ? 'light' : 'dark')
-  }
 
   const handleLeftPress = () => {
     if (onLeftPress) {
       onLeftPress()
     } else if (path) {
-      router.push(path)
+      router.push(path as Href)
     }
   }
 
@@ -35,19 +32,17 @@ export const Bar = ({ path, title, leftIcon, onLeftPress }: BarProps) => {
     <View style={styles.container}>
       <View style={styles.containerLeft}>
         <TouchableOpacity onPress={handleLeftPress}>
-          <Icon name={leftIcon} color={colors['icon-secondary']} size='md' />
+          <Icon name={leftIcon} color='icon-secondary' size='lg' />
         </TouchableOpacity>
-
         <AppText variant='title'>{title}</AppText>
       </View>
-      <TouchableOpacity onPress={handleThemePress}>
-        <Icon name='theme' color={colors['icon-secondary']} size='md' />
-      </TouchableOpacity>
+
+      <Menu onFiltersApply={onFiltersApply} />
     </View>
   )
 }
-type BarStylesProps = Pick<ThemeContextValue, 'spacing'>
 
+type BarStylesProps = Pick<ThemeContextValue, 'spacing'>
 const createStyles = ({ spacing }: BarStylesProps) =>
   StyleSheet.create({
     container: {
@@ -55,7 +50,6 @@ const createStyles = ({ spacing }: BarStylesProps) =>
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingTop: spacing['space-sm'],
-      paddingHorizontal: spacing['space-lg'],
     },
     containerLeft: {
       flexDirection: 'row',

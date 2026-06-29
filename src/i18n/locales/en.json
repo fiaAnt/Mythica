@@ -10,7 +10,11 @@
   "select_type": "Select type",
   "only_explored": "Only explored",
   "filters": "Filters",
+  "theme": "Theme",
+  "light_theme": "Light theme",
+  "dark_theme": "Dark theme",
   "reset": "Reset",
+  "close": "Close",
   "apply": "Apply",
 
   "character_title": "Character",

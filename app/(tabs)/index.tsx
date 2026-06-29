@@ -1,4 +1,3 @@
-import { AppDropdown } from '@/components/ui/AppDropdown'
 import { AppText } from '@/components/ui/AppText'
 import { Bar } from '@/components/ui/Bar'
 import { Button } from '@/components/ui/Button'
@@ -25,8 +24,6 @@ enum Types {
 export default function HomeScreen() {
   const [searchText, setSearchText] = useState('')
   const [results, setResults] = useState('')
-  const [selectedMythology, setSelectedMythology] = useState<string | undefined>()
-  const [selectedType, setSelectedType] = useState<string | undefined>()
   const { colors, spacing } = useTheme()
   const styles = useMemo(() => createStyles({ colors, spacing }), [colors, spacing])
 
@@ -44,21 +41,6 @@ export default function HomeScreen() {
         <AppText variant='title' align='center'>
           Welcome to Mythica
         </AppText>
-
-        <AppDropdown
-          label='Mythology'
-          placeholder='Select mythology'
-          options={Options}
-          value={selectedMythology}
-          onChange={setSelectedMythology}
-        />
-        <AppDropdown
-          label='Types'
-          placeholder='Select type'
-          options={Types}
-          value={selectedType}
-          onChange={setSelectedType}
-        />
 
         <Button title='Button' />
 

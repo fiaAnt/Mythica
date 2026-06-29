@@ -1,0 +1,2 @@
+export { FiltersModal } from './FiltersModal';
+

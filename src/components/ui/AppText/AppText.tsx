@@ -1,32 +1,58 @@
-import { StyleSheet, Text } from 'react-native'
+import { ThemeContextValue } from '@/context/themeContext'
+import { useTheme } from '@/hooks/useTheme'
+import { ThemeColor } from '@/theme/colors'
+import { useMemo } from 'react'
+import { StyleSheet, Text, TextStyle } from 'react-native'
 
 interface AppTextProps {
-  children: string
+  children: string | string[]
   variant?: 'title' | 'subtitle' | 'body' | 'small'
-  color?: string
+  color?: ThemeColor | string
   align?: 'left' | 'center' | 'right'
+  style?: TextStyle
 }
 
-export const AppText = ({ children, variant = 'body', color, align = 'left' }: AppTextProps) => {
-  return <Text style={[styles[variant], { textAlign: align }, color && { color }]}>{children}</Text>
-}
+export const AppText = ({
+  children,
+  variant = 'body',
+  color,
+  align = 'left',
+  style,
+}: AppTextProps) => {
+  const { colors, typography } = useTheme()
+  const styles = useMemo(() => createStyles({ colors, typography }), [colors, typography])
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 28,
-    fontFamily: 'Georgia',
-    color: '#000',
-  },
-  subtitle: {
-    fontSize: 20,
-    fontFamily: 'Georgia',
-  },
-  body: {
-    fontSize: 16,
-    lineHeight: 24,
-  },
-  small: {
-    fontSize: 12,
-    color: '#666',
-  },
-})
+  return (
+    <Text
+      style={[
+        styles[variant],
+        {
+          textAlign: align,
+          color: colors['text-primary'],
+        },
+        style,
+      ]}
+    >
+      {children}
+    </Text>
+  )
+}
+type TextStylesProps = Pick<ThemeContextValue, 'typography'>
+const createStyles = ({ typography }: TextStylesProps) =>
+  StyleSheet.create({
+    title: {
+      fontSize: typography['font-size-lg'],
+      fontFamily: 'Georgia',
+      fontWeight: 'bold',
+    },
+    subtitle: {
+      fontSize: typography['font-size-md'],
+      fontFamily: 'Georgia',
+    },
+    body: {
+      fontSize: typography['font-size-sm'],
+    },
+    small: {
+      fontSize: typography['font-size-xs'],
+    },
+  })

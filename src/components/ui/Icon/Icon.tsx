@@ -19,6 +19,5 @@ export const Icon: React.FC<IconProps> = ({ color, name, size }) => {
     console.warn(`Icon "${name}" not found`)
     return null
   }
-
   return <IconComponent color={iconColor} width={IconSizes[size]} height={IconSizes[size]} />
 }

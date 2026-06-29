@@ -10,7 +10,11 @@
   "select_type": "Выберите тип",
   "only_explored": "Только изученные",
   "filters": "Фильтры",
+  "theme": "Тема оформления",
+  "light_theme": "Светлая тема",
+  "dark_theme": "Тёмная тема",
   "reset": "Сброс",
+  "close": "Закрыть",
   "apply": "Применить",
 
   "character_title": "Персонаж",

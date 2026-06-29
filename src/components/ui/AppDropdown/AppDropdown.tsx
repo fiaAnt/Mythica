@@ -1,5 +1,7 @@
 import { AppText } from '@/components/ui/AppText'
-import { useEffect, useRef, useState } from 'react'
+import { ThemeContextValue } from '@/context/themeContext'
+import { useTheme } from '@/hooks/useTheme'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   Animated,
   Dimensions,
@@ -31,9 +33,6 @@ interface AppDropdownProps {
   onChange: (value: string) => void
 }
 
-const ACCENT = '#DFD4C2'
-const TEXT = '#212529'
-
 export default function AppDropdown({
   label,
   placeholder = 'Select',
@@ -44,10 +43,15 @@ export default function AppDropdown({
   const [open, setOpen] = useState(false)
   const [layout, setLayout] = useState<Layout | null>(null)
   const ref = useRef<View>(null)
+  const { colors, spacing, borderRadius } = useTheme()
+  const styles = useMemo(
+    () => createStyles({ colors, spacing, borderRadius }),
+    [colors, spacing, borderRadius],
+  )
   const anim = useRef(new Animated.Value(0)).current
-  const optionsArray = Array.isArray(options)
-    ? options
-    : Object.entries(options).map(([label, value]) => ({ label, value }))
+  const optionsArray = Array.isArray(options || [])
+    ? options || []
+    : Object.entries(options || {}).map(([label, value]) => ({ label, value }))
   const selected = optionsArray.find((o) => o.value === value)
   const topDistance = 4
   useEffect(() => {
@@ -75,7 +79,7 @@ export default function AppDropdown({
 
   return (
     <View ref={ref} style={styles.container}>
-      <AppText variant='body' color={TEXT}>
+      <AppText variant='body' color={colors['text-primary']}>
         {label}
       </AppText>
 
@@ -131,34 +135,36 @@ export default function AppDropdown({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: { width: '100%', gap: 6 },
-  input: {
-    backgroundColor: ACCENT,
-    padding: 12,
-    borderRadius: 12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.08)' },
-  dropdown: {
-    position: 'absolute',
-    backgroundColor: ACCENT,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#d2c4ae',
-    elevation: 4,
-    maxHeight: 250,
-    overflow: 'hidden',
-    zIndex: 1000,
-  },
-  item: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#d8cab3',
-  },
-  selected: { backgroundColor: '#eadfcf' },
-})
+type DropdownStylesProps = Pick<ThemeContextValue, 'colors' | 'spacing' | 'borderRadius'>
+const createStyles = ({ colors, spacing, borderRadius }: DropdownStylesProps) =>
+  StyleSheet.create({
+    container: { width: '100%', gap: spacing['space-xs'] },
+    input: {
+      backgroundColor: colors['background-selected'],
+      padding: spacing['space-md'],
+      borderRadius: borderRadius['border-lg'],
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    overlay: {
+      backgroundColor: colors['overlay-50'],
+    },
+    dropdown: {
+      position: 'absolute',
+      backgroundColor: colors['background-surface-secondary'],
+      borderRadius: borderRadius['border-lg'],
+      borderWidth: 1,
+      borderColor: colors['border-primary'],
+      maxHeight: 250,
+      overflow: 'hidden',
+      zIndex: 1000,
+    },
+    item: {
+      paddingVertical: spacing['space-md'],
+      paddingHorizontal: spacing['space-lg'],
+      borderBottomWidth: 1,
+      borderBottomColor: colors['border-primary'],
+    },
+    selected: { backgroundColor: colors['background-selected'] },
+  })

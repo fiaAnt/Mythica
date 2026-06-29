@@ -1,4 +1,3 @@
-import searchIcon from '@/assets/images/search.svg'
 import { AppText } from '@/components/ui/AppText'
 import { ThemeContextValue } from '@/context/themeContext'
 import { useTheme } from '@/hooks/useTheme'

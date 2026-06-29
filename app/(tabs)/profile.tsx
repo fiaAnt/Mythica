@@ -4,7 +4,6 @@ import { Icon } from '@/components/ui/Icon'
 import { CARD_MIN_HEIGHT, UNDERLINE_HEIGHT } from '@/constants/sizes'
 import { ThemeContextValue } from '@/context/themeContext'
 import { useTheme } from '@/hooks/useTheme'
-
 import { router } from 'expo-router'
 import React, { useMemo, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
