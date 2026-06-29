@@ -13,6 +13,7 @@
   "theme": "Theme",
   "light_theme": "Light theme",
   "dark_theme": "Dark theme",
+  "logOut": "Log out",
   "reset": "Reset",
   "close": "Close",
   "apply": "Apply",
@@ -36,8 +37,17 @@
   "explored_content": "Explored content goes here",
   "favorites_content": "Favorites content goes here",
 
+  "lightTheme": "Light Theme",
+  "darkTheme": "Dark Theme",
+
   "characterError": "Character not found",
   "funFact": "Fun facts:",
   "symbols": "Symbols:",
-  "addNote": "Add note"
+  "addNote": "Add note",
+  "edit": "Edit",
+  "delete": "Delete",
+
+  "welcome": "Welcome to Mythica!",
+  "loginText": "Log in to continue",
+  "login": "Log in"
 }
