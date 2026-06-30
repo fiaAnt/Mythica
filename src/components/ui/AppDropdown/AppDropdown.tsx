@@ -1,5 +1,5 @@
 import { AppText } from '@/components/ui/AppText'
-import { ThemeContextValue } from '@/context/themeContext'
+import { ThemeContextValue } from '@/context/ThemeContext'
 import { useTheme } from '@/hooks/useTheme'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
@@ -12,26 +12,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-
-interface DropdownOption {
-  label: string
-  value: string
-}
-
-interface Layout {
-  x: number
-  y: number
-  width: number
-  height: number
-}
-
-interface AppDropdownProps {
-  label: string
-  placeholder?: string
-  options: Record<string, string> | readonly DropdownOption[]
-  value?: string
-  onChange: (value: string) => void
-}
+import { AppDropdownProps, Layout } from './AppDropdown.types'
 
 export default function AppDropdown({
   label,
@@ -156,7 +137,6 @@ const createStyles = ({ colors, spacing, borderRadius }: DropdownStylesProps) =>
       borderRadius: borderRadius['border-lg'],
       borderWidth: 1,
       borderColor: colors['border-primary'],
-      maxHeight: 250,
       overflow: 'hidden',
       zIndex: 1000,
     },

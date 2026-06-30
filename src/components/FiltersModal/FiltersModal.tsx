@@ -1,19 +1,14 @@
-import { Toggle } from '@/components/Toggle'
 import { AppDropdown } from '@/components/ui/AppDropdown'
 import { AppText } from '@/components/ui/AppText'
 import { Button } from '@/components/ui/Button'
-import { ThemeContextValue } from '@/context/themeContext'
+import { ThemeContextValue } from '@/context/ThemeContext'
 import { useFilters } from '@/hooks/useFilters'
 import { useTheme } from '@/hooks/useTheme'
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 import { Icon } from '../ui/Icon'
-
-interface FilterData {
-  mythologies: { label: string; value: string }[]
-  types: { label: string; value: string }[]
-}
+import { Toggle } from '../ui/Toggle'
 
 interface FiltersModalProps {
   visible: boolean
@@ -23,6 +18,8 @@ interface FiltersModalProps {
   setSelectedMythology: (value: string | undefined) => void
   selectedType: string | undefined
   setSelectedType: (value: string | undefined) => void
+  isExplored: boolean
+  setIsExplored: (value: boolean) => void
 }
 
 export const FiltersModal = ({
@@ -33,6 +30,8 @@ export const FiltersModal = ({
   setSelectedMythology,
   selectedType,
   setSelectedType,
+  isExplored,
+  setIsExplored,
 }: FiltersModalProps) => {
   const { colors, spacing, borderRadius } = useTheme()
   const styles = useMemo(
@@ -42,12 +41,11 @@ export const FiltersModal = ({
   const { t, i18n } = useTranslation()
 
   const { filters } = useFilters(i18n.language)
-  const [isEnabled, setIsEnabled] = useState(false)
 
   const handleReset = () => {
     setSelectedMythology(undefined)
     setSelectedType(undefined)
-    setIsEnabled(false)
+    setIsExplored(false)
   }
 
   const handleApply = () => {
@@ -86,23 +84,13 @@ export const FiltersModal = ({
               value={selectedType}
               onChange={setSelectedType}
             />
-            <Toggle label={t('only_explored')} value={isEnabled} onToggle={setIsEnabled} />
+            <Toggle label={t('only_unexplored')} value={isExplored} onToggle={setIsExplored} />
           </View>
 
           <View style={styles.footer}>
-            <Button
-              title={t('reset')}
-              variant='secondary'
-              style={styles.buttonSpacing}
-              onPress={handleReset}
-            />
+            <Button title={t('reset')} variant='secondary' onPress={handleReset} />
 
-            <Button
-              title={t('apply')}
-              variant='primary'
-              style={styles.buttonSpacing}
-              onPress={handleApply}
-            />
+            <Button title={t('apply')} variant='primary' onPress={handleApply} />
           </View>
         </View>
       </View>
@@ -123,7 +111,6 @@ const createStyles = ({ colors, spacing, borderRadius }: FiltersStyleProps) =>
       borderRadius: borderRadius['border-xl'],
       padding: spacing['space-xxl'],
       width: '90%',
-      maxWidth: 400,
       gap: spacing['space-xl'],
     },
     header: {
@@ -140,8 +127,5 @@ const createStyles = ({ colors, spacing, borderRadius }: FiltersStyleProps) =>
       justifyContent: 'space-between',
       marginTop: spacing['space-xxl'],
       gap: spacing['space-md'],
-    },
-    buttonSpacing: {
-      flex: 1,
     },
   })

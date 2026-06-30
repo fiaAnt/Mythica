@@ -1,4 +1,4 @@
-import { ThemeContextValue } from '@/context/themeContext'
+import { ThemeContextValue } from '@/context/ThemeContext'
 import { useTheme } from '@/hooks/useTheme'
 import { ThemeColor } from '@/theme/colors'
 import { useMemo } from 'react'
@@ -8,7 +8,7 @@ interface AppTextProps {
   children: React.ReactNode
   variant?: 'title' | 'subtitle' | 'body' | 'note' | 'small'
   color?: ThemeColor | string
-  align?: 'left' | 'center' | 'right'
+  align?: 'left' | 'center' | 'right' | 'justify'
   style?: TextStyle
 }
 
@@ -42,18 +42,22 @@ const createStyles = ({ typography }: TextStylesProps) =>
   StyleSheet.create({
     title: {
       fontSize: typography['font-size-lg'],
-      fontWeight: 'bold',
+      fontFamily: 'OpenSana-Bold',
     },
     subtitle: {
       fontSize: typography['font-size-md'],
+      fontFamily: 'OpenSana-Regular',
     },
     body: {
       fontSize: typography['font-size-sm'],
+      fontFamily: 'OpenSana-Regular',
     },
     note: {
       fontSize: typography['font-size-sm'],
+      fontFamily: 'OpenSana-Italic',
     },
     small: {
       fontSize: typography['font-size-xs'],
+      fontFamily: 'OpenSana-Regular',
     },
   })

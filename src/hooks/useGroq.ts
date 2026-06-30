@@ -30,7 +30,6 @@ export const useGroq = () => {
         return []
       }
       const currentLanguage = i18n.language || 'en'
-
       const prompt = `
 Find 3 most similar mythology characters from the list below.
 
@@ -38,14 +37,21 @@ Target character:
 Name: ${currentCharacter.name}
 Description: ${currentCharacter.description}
 Mythology: ${currentCharacter.mythology}
-Symbols: ${currentCharacter.symbols?.join(', ') ?? ''}
+Symbols: ${Array.isArray(currentCharacter.symbols) ? currentCharacter.symbols.join(', ') : (currentCharacter.symbols ?? '')}
 
 Characters list:
 ${otherCharacters
-  .map(
-    (c) =>
-      `ID: "${c.id}", Name: "${c.name}", Description: "${c.description.slice(0, 200)}", Symbols: "${c.symbols?.join(', ') ?? ''}"`,
-  )
+  .map((c) => {
+    const formattedSymbols = Array.isArray(c.symbols)
+      ? c.symbols.join(', ')
+      : typeof c.symbols === 'string'
+        ? c.symbols
+        : ''
+
+    const shortDescription = c.description ? c.description.slice(0, 200) : ''
+
+    return `ID: "${c.id}", Name: "${c.name}", Description: "${shortDescription}", Symbols: "${formattedSymbols}"`
+  })
   .join('\n')}
 
 Choose the 3 most similar characters.

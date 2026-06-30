@@ -1,6 +1,6 @@
 import { AppText } from '@/components/ui/AppText'
 import { Card } from '@/components/ui/Card'
-import { ThemeContextValue } from '@/context/themeContext'
+import { ThemeContextValue } from '@/context/ThemeContext'
 import { useTheme } from '@/hooks/useTheme'
 import React, { useMemo } from 'react'
 import { FlatList, StyleSheet, useWindowDimensions, View } from 'react-native'
@@ -9,7 +9,8 @@ import { CardListProps } from './CardList.types'
 export const CardList: React.FC<CardListProps> = ({ data, numColumns = 2, header }) => {
   const { width } = useWindowDimensions()
   const { spacing } = useTheme()
-  const styles = useMemo(() => createStyles({ spacing }, [spacing]))
+  const styles = useMemo(() => createStyles({ spacing }), [spacing])
+
   const horizontalPadding = spacing['space-xl']
   const gap = spacing['space-md']
   const cardWidth = (width - horizontalPadding * 2 - gap * (numColumns - 1)) / numColumns
@@ -22,6 +23,8 @@ export const CardList: React.FC<CardListProps> = ({ data, numColumns = 2, header
       contentContainerStyle={styles.container}
       columnWrapperStyle={styles.row}
       ListHeaderComponent={header}
+      nestedScrollEnabled={true}
+      showsVerticalScrollIndicator={false}
       renderItem={({ item }) => (
         <View style={[styles.cardWrapper, { width: cardWidth }]}>
           <Card characterId={item.id} characterName={item.name} cardWidth={cardWidth}>

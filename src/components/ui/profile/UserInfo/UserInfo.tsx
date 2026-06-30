@@ -1,43 +1,56 @@
 import { AppText } from '@/components/ui/AppText'
-import { ThemeContextValue } from '@/context/themeContext'
+import { ThemeContextValue } from '@/context/ThemeContext'
+import { useProgress } from '@/hooks/useProgress'
 import { useTheme } from '@/hooks/useTheme'
-import { useMemo } from 'react'
+import { getFilters } from '@/services/filtersService'
+import { useAppSelector } from '@/store'
+import { useQuery } from '@tanstack/react-query'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, View } from 'react-native'
-import { Icon } from '../../Icon'
 import { ProgressBar } from '../ProgressBar'
+import { UserAvatar } from '../UserAvatar'
 
 export const UserInfo = () => {
   const { colors, spacing } = useTheme()
   const styles = useMemo(() => createStyles({ colors, spacing }), [colors, spacing])
 
-  const { t } = useTranslation()
+  const { i18n } = useTranslation()
+  const user = useAppSelector((state) => state.auth.user)
+  const { getProgress } = useProgress()
 
-  const MOCK_LOADING_DATA = [
-    { label: t('loading_1'), progress: 75 },
-    { label: t('loading_2'), progress: 30 },
-    { label: t('loading_3'), progress: 100 },
-  ]
+  const { data: filters, isLoading } = useQuery({
+    queryKey: ['filters', i18n.language],
+    queryFn: () => getFilters(i18n.language),
+  })
 
   return (
     <View style={styles.userInformation}>
-      <Icon name='user' size='lg' />
+      <UserAvatar imageUrl={user?.picture} />
+
       <View style={styles.loadings}>
-        {MOCK_LOADING_DATA.map((item, index) => (
-          <View key={index} style={styles.loadingItem}>
-            <View style={styles.loadingHeader}>
-              <AppText variant='small'>{item.label}</AppText>
-              <AppText variant='small'>{item.progress}%</AppText>
-            </View>
-            <ProgressBar progress={item.progress} />
-          </View>
-        ))}
+        {!isLoading &&
+          filters?.mythologies.map((filter) => {
+            const progress = getProgress(filter.value)
+
+            return (
+              <View key={filter.value} style={styles.loadingItem}>
+                <View style={styles.loadingHeader}>
+                  <AppText variant='small'>{filter.label}</AppText>
+                  <AppText variant='small'>{progress.percentage}%</AppText>
+                </View>
+
+                <ProgressBar progress={progress.percentage} />
+              </View>
+            )
+          })}
       </View>
     </View>
   )
 }
 
-type UserInfoStylesProps = Pick<ThemeContextValue, 'spacing'>
+type UserInfoStylesProps = Pick<ThemeContextValue, 'spacing' | 'colors'>
+
 const createStyles = ({ spacing }: UserInfoStylesProps) =>
   StyleSheet.create({
     userInformation: {

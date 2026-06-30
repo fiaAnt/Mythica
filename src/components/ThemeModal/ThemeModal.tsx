@@ -1,7 +1,7 @@
 import { AppText } from '@/components/ui/AppText'
 import { Button } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
-import { Theme, ThemeContextValue, Themes } from '@/context/themeContext'
+import { Theme, ThemeContextValue, Themes } from '@/context/ThemeContext'
 import { useTheme } from '@/hooks/useTheme'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -37,7 +37,7 @@ export const ThemeModal = ({ visible, onClose }: ThemeModalProps) => {
           style={[styles.modalContainer, { backgroundColor: colors['background-surface-primary'] }]}
         >
           <View style={styles.header}>
-            <Icon name='theme' color='icon-primary' size='lg' />
+            <Icon name='theme' size='lg' />
             <AppText variant='title' style={{ color: colors['text-primary'] }}>
               {t('theme')}
             </AppText>
@@ -75,7 +75,7 @@ const createStyles = ({ colors, spacing, borderRadius }: ThemeStyleProps) =>
     modalContainer: {
       borderRadius: borderRadius['border-xl'],
       padding: spacing['space-xl'],
-      gap: spacing['space-xxl'],
+      gap: spacing['space-xl'],
     },
     header: {
       flexDirection: 'row',
@@ -83,7 +83,7 @@ const createStyles = ({ colors, spacing, borderRadius }: ThemeStyleProps) =>
       gap: spacing['space-sm'],
     },
     content: {
-      gap: spacing['space-md'],
-      marginHorizontal: spacing['space-md'],
+      gap: spacing['space-xl'],
+      marginHorizontal: spacing['space-xl'],
     },
   })

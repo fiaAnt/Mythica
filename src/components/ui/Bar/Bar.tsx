@@ -1,6 +1,6 @@
 import { Menu } from '@/components/Menu'
 import { AppText } from '@/components/ui/AppText'
-import { ThemeContextValue } from '@/context/themeContext'
+import { ThemeContextValue } from '@/context/ThemeContext'
 import { useTheme } from '@/hooks/useTheme'
 import { Href, router } from 'expo-router'
 import React, { useMemo } from 'react'
@@ -49,7 +49,7 @@ const createStyles = ({ spacing }: BarStylesProps) =>
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingHorizontal: spacing['space-lg'],
-      paddingTop: spacing['space-sm'],
+      paddingVertical: spacing['space-sm'],
     },
     containerLeft: {
       flexDirection: 'row',

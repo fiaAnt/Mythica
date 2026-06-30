@@ -1,5 +1,5 @@
 import { AppText } from '@/components/ui/AppText'
-import { ThemeContextValue } from '@/context/themeContext'
+import { ThemeContextValue } from '@/context/ThemeContext'
 import { useTheme } from '@/hooks/useTheme'
 import React, { useMemo } from 'react'
 import { StyleSheet, Switch, View } from 'react-native'

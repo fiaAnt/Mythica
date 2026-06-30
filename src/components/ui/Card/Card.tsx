@@ -11,6 +11,7 @@ interface CardProps {
   onPress?: () => void
   children?: React.ReactNode
   cardWidth?: number
+  isClickable: boolean
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -19,6 +20,7 @@ export const Card: React.FC<CardProps> = ({
   onPress,
   children,
   cardWidth = CARD_MIN_HEIGHT,
+  isClickable = true,
 }) => {
   const overlayImage = useMemo(() => {
     if (!characterId) return null

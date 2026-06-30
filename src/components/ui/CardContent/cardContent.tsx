@@ -1,5 +1,5 @@
 import { CARD_ASPECT_RATIO } from '@/constants/sizes'
-import { ThemeContextValue } from '@/context/themeContext'
+import { ThemeContextValue } from '@/context/ThemeContext'
 import { useTheme } from '@/hooks/useTheme'
 import { getIcon } from '@/services/cloudinaryService'
 import React, { useMemo } from 'react'

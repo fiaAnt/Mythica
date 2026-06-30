@@ -29,7 +29,7 @@ i18n.use(initReactI18next).init({
   interpolation: {
     escapeValue: false,
   },
-  compatibilityJSON: 'v4',
+  compatibilityJSON: 'v3',
   react: {
     useSuspense: false,
   },

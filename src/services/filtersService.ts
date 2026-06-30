@@ -1,21 +1,17 @@
 import { db } from '@/firebase'
+import { collection, getDocs } from 'firebase/firestore'
 
 export const getFilters = async (language: string) => {
-  const querySnapshot = await db.collection(`characters_${language}`).get()
+  const colRef = collection(db, `characters_${language}`)
+  const querySnapshot = await getDocs(colRef)
 
   const mythologiesSet = new Set<string>()
   const typesSet = new Set<string>()
 
-  querySnapshot.docs.map((doc) => {
+  querySnapshot.forEach((doc) => {
     const data = doc.data()
-
-    if (data.mythology) {
-      mythologiesSet.add(data.mythology)
-    }
-
-    if (data.type) {
-      typesSet.add(data.type)
-    }
+    if (data?.mythology) mythologiesSet.add(data.mythology)
+    if (data?.type) typesSet.add(data.type)
   })
 
   return {
@@ -29,4 +25,3 @@ export const getFilters = async (language: string) => {
     })),
   }
 }
-

@@ -1,5 +1,5 @@
 import { AppText } from '@/components/ui/AppText'
-import { ThemeContextValue } from '@/context/themeContext'
+import { ThemeContextValue } from '@/context/ThemeContext'
 import { useTheme } from '@/hooks/useTheme'
 import { useMemo } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
@@ -10,7 +10,7 @@ interface ButtonProps {
   variant?: 'primary' | 'secondary'
 }
 
-export const Button = ({ title = 'Ok', onPress = () => {}, variant = 'primary' }: ButtonProps) => {
+export const Button = ({ title, onPress = () => {}, variant = 'primary' }: ButtonProps) => {
   const { colors, borderRadius, spacing } = useTheme()
   const styles = useMemo(
     () => createStyles({ colors, borderRadius, spacing }),
@@ -32,6 +32,7 @@ const createStyles = ({ colors, borderRadius, spacing }: ButtonStylesProps) =>
   StyleSheet.create({
     button: {
       paddingVertical: spacing['space-md'],
+      paddingHorizontal: spacing['space-md'],
       width: '100%',
       borderRadius: borderRadius['border-xl'],
       alignItems: 'center',

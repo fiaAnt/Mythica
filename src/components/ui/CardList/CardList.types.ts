@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react'
 
-interface CardItem {
+export interface CardItem {
   id: string
   title: string
   name: string
