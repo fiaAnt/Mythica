@@ -7,7 +7,6 @@ export const redirectUri = AuthSession.makeRedirectUri({
   scheme: 'mythica',
   path: 'login',
 })
-console.log('Your redirect URI is:', redirectUri)
 export const discovery = {
   authorizationEndpoint: `https://${AUTH0_DOMAIN}/authorize`,
   tokenEndpoint: `https://${AUTH0_DOMAIN}/oauth/token`,
