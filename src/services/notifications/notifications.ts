@@ -97,9 +97,9 @@ export async function scheduleWeeklyNotification() {
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
-        weekday: 3,
-        hour: 13,
-        minute: 4,
+        weekday: 4,
+        hour: 14,
+        minute: 13,
       },
     })
     return true

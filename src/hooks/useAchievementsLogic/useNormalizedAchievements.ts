@@ -1,6 +1,7 @@
+import { AchievementType } from '@/store/features/achievements/achievements.types'
 import { useMemo } from 'react'
 
-export function useNormalizedAchievements(rawAchievements: any) {
+export function useNormalizedAchievements(rawAchievements: AchievementType) {
   return useMemo(() => {
     if (!rawAchievements) return []
 
