@@ -18,7 +18,6 @@ export function useCharacterAuthAndData() {
   const explored = useAppSelector((state) => state.explored?.explored || [])
 
   const character = useMemo(() => {
-    const decodedName = id ? decodeURIComponent(id) : ''
     return characters.find((char) => String(char.id) === String(id))
   }, [id, characters])
 

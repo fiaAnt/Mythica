@@ -114,7 +114,7 @@ export default function LoginScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Bar path='/' title={t('login')} icon={getIcon('back', theme)} />
+      <Bar path='/' title={t('login')} leftIcon={'back'} />
       <View style={styles.content}>
         <Image
           style={[

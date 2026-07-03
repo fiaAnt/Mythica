@@ -2,13 +2,12 @@ import { AppText } from '@/components/ui/AppText'
 import { Bar } from '@/components/ui/Bar'
 import { CardList } from '@/components/ui/CardList'
 import { Input } from '@/components/ui/Input'
+import { ThemeContextValue } from '@/context/ThemeContext'
+import { useHomeLogic } from '@/hooks/useHomeLogic'
 import { Href } from 'expo-router'
 import React, { useMemo } from 'react'
 import { Animated, StyleSheet, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-
-import { ThemeContextValue } from '@/context/ThemeContext'
-import { useHomeLogic } from '@/hooks/useHomeLogic'
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets()

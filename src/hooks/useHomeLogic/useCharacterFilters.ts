@@ -3,6 +3,7 @@ import { Character } from '@/hooks/useCharacters/useCharacters.types'
 import { ExploredState } from '@/store/features/explored/explored.types'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDebounce } from '../useDebounce'
 
 interface FilterOptions {
   isAuthenticated: boolean
@@ -15,6 +16,7 @@ export function useCharacterFilters({ isAuthenticated, userExplored }: FilterOpt
   const [selectedMythology, setSelectedMythology] = useState<string | undefined>()
   const [selectedType, setSelectedType] = useState<string | undefined>()
   const [onlyExplored, setOnlyExplored] = useState(false)
+  const debouncedSearchText = useDebounce(searchText, 300)
 
   const {
     characters,
@@ -35,7 +37,7 @@ export function useCharacterFilters({ isAuthenticated, userExplored }: FilterOpt
   const filteredCharacters = useMemo(() => {
     const rules = [
       (char: Character) =>
-        !searchText || char.name.toLowerCase().includes(searchText.toLowerCase()),
+        !debouncedSearchText || char.name.toLowerCase().includes(debouncedSearchText.toLowerCase()),
       (char: Character) => !selectedMythology || char.mythology === selectedMythology,
       (char: Character) => !selectedType || char.type === selectedType,
       (char: Character) => {
@@ -47,7 +49,7 @@ export function useCharacterFilters({ isAuthenticated, userExplored }: FilterOpt
     return characters.filter((char) => rules.every((rule) => rule(char)))
   }, [
     characters,
-    searchText,
+    debouncedSearchText,
     selectedMythology,
     selectedType,
     onlyExplored,
