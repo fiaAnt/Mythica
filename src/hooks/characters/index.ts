@@ -1,0 +1,2 @@
+export { useCharacters } from './useСharacters';
+

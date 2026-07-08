@@ -1,14 +1,9 @@
-import { useCharacters } from '@/hooks/useCharacters'
-import { Character } from '@/hooks/useCharacters/useCharacters.types'
-import { ExploredState } from '@/store/features/explored/explored.types'
+import { useCharacters } from '@/hooks/characters'
+import { Character } from '@/hooks/characters/useCharacters.types'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDebounce } from '../useDebounce'
-
-interface FilterOptions {
-  isAuthenticated: boolean
-  userExplored: ExploredState[]
-}
+import { useDebounce } from '../common/useDebounce'
+import { FilterOptions } from './types'
 
 export function useCharacterFilters({ isAuthenticated, userExplored }: FilterOptions) {
   const { i18n } = useTranslation()
