@@ -1,7 +1,8 @@
 import { AppText } from '@/components/ui/AppText'
 import { Card } from '@/components/ui/Card'
+import { CARD_MIN_HEIGHT } from '@/constants/sizes'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import React, { useMemo } from 'react'
 import { FlatList, StyleSheet, useWindowDimensions, View } from 'react-native'
 import { CardListProps } from './CardList.types'
@@ -20,9 +21,15 @@ export const CardList: React.FC<CardListProps> = ({ data, numColumns = 2, header
       data={data}
       numColumns={numColumns}
       keyExtractor={(item) => item.id}
+      getItemLayout={(_, index) => ({
+        length: CARD_MIN_HEIGHT,
+        offset: CARD_MIN_HEIGHT * index,
+        index,
+      })}
       contentContainerStyle={styles.container}
       columnWrapperStyle={styles.row}
       ListHeaderComponent={header}
+      removeClippedSubviews={true}
       nestedScrollEnabled={true}
       showsVerticalScrollIndicator={false}
       renderItem={({ item }) => (

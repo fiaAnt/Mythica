@@ -1,6 +1,7 @@
 import { AppText } from '@/components/ui/AppText'
+import { DROPDOWN_MAX_HEIGHT } from '@/constants/sizes'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   Animated,
@@ -98,6 +99,11 @@ export default function AppDropdown({
             <FlatList
               data={optionsArray}
               keyExtractor={(i) => i.value}
+              getItemLayout={(_, index) => ({
+                lenght: DROPDOWN_MAX_HEIGHT,
+                offset: DROPDOWN_MAX_HEIGHT * index,
+                index,
+              })}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={[styles.item, item.value === value && styles.selected]}
