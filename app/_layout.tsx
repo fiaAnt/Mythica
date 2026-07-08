@@ -1,5 +1,5 @@
 import { ThemeProvider } from '@/context/ThemeContext'
-import { useAppInitialization } from '@/hooks/useAppInitialization'
+import { useAppInitialization } from '@/hooks/progress/useAppInitialization'
 import '@/i18n'
 import { setupWeeklyNotificationChannel } from '@/services/notifications/notifications'
 import { store, useAppDispatch } from '@/store'
@@ -54,22 +54,7 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <SafeAreaProvider>
           <ThemeProvider>
-            <Stack>
-              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-
-              <Stack.Screen name='profile' options={{ headerShown: false }} />
-
-              <Stack.Screen name='login' options={{ headerShown: false }} />
-
-              <Stack.Screen
-                name='character/[id]'
-                options={{
-                  headerShown: true,
-                  title: t('character'),
-                  headerBackTitle: t('common'),
-                }}
-              />
-            </Stack>
+            <Stack screenOptions={{ headerShown: false }}></Stack>
 
             <StatusBar style='auto' />
           </ThemeProvider>

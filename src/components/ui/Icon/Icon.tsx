@@ -1,8 +1,8 @@
 import { IconSize, IconSizes } from '@/constants/icons'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import { getIcon } from '@/services/cloudinaryService'
+import { Image } from 'expo-image'
 import React, { useMemo } from 'react'
-import { Image, StyleSheet } from 'react-native'
 
 export interface IconProps {
   name: string
@@ -22,18 +22,13 @@ export const Icon: React.FC<IconProps> = ({ name, size }) => {
     <Image
       source={iconSource}
       style={[
-        styles.icon,
         {
           width: pixelSize,
           height: pixelSize,
         },
       ]}
+      contentFit='contain'
+      cachePolicy='memory-disk'
     />
   )
 }
-
-const styles = StyleSheet.create({
-  icon: {
-    resizeMode: 'contain',
-  },
-})

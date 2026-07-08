@@ -1,15 +1,11 @@
 import { CARD_ASPECT_RATIO } from '@/constants/sizes'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import { getIcon } from '@/services/cloudinaryService'
+import { Image } from 'expo-image'
 import React, { useMemo } from 'react'
-import { Image, StyleSheet, View } from 'react-native'
-
-interface CardContentProps {
-  overlayImage?: { uri: string } | null
-  children?: React.ReactNode
-  cardWidth?: number
-}
+import { StyleSheet, View } from 'react-native'
+import { CardContentProps } from './CardContent.types'
 
 export const CardContent = ({ overlayImage, children, cardWidth }: CardContentProps) => {
   const { spacing, theme } = useTheme()
@@ -20,10 +16,17 @@ export const CardContent = ({ overlayImage, children, cardWidth }: CardContentPr
   return (
     <View style={[styles.card, { width: cardWidth }]}>
       <View style={styles.imageContainer}>
-        {backgroundImage && <Image source={backgroundImage} style={styles.backgroundImage} />}
+        {backgroundImage && (
+          <Image
+            contentFit='cover'
+            source={backgroundImage}
+            style={styles.backgroundImage}
+            cachePolicy='memory-disk'
+          />
+        )}
         {overlayImage && (
           <View style={styles.overlayContainer}>
-            <Image source={overlayImage} style={styles.characterImage} />
+            <Image source={overlayImage} style={styles.characterImage} contentFit='contain' />
           </View>
         )}
         {children && <View style={styles.content}>{children}</View>}
@@ -47,7 +50,6 @@ const createStyles = ({ spacing }: CardContentStylesProps) =>
       position: 'absolute',
       width: '100%',
       height: '100%',
-      resizeMode: 'cover',
       zIndex: 1,
     },
     overlayContainer: {
@@ -63,7 +65,6 @@ const createStyles = ({ spacing }: CardContentStylesProps) =>
     characterImage: {
       width: '100%',
       height: '100%',
-      resizeMode: 'contain',
     },
     content: {
       position: 'absolute',

@@ -2,11 +2,12 @@ import { AppText } from '@/components/ui/AppText'
 import { Button } from '@/components/ui/Button'
 import { ICON_SIZE } from '@/constants/sizes'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import { AchievementId, getAchievementIcon } from '@/services/cloudinaryService'
+import { Image } from 'expo-image'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, Modal, StyleSheet, View } from 'react-native'
+import { Modal, StyleSheet, View } from 'react-native'
 
 interface AchievementsModalProps {
   visible: boolean
@@ -47,7 +48,7 @@ export const AchievementsModal = ({
           <Image
             source={getAchievementIcon(theme, achievementId)}
             style={styles.image}
-            resizeMode='contain'
+            contentFit='contain'
           />
 
           <AppText variant='body' align='center'>

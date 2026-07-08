@@ -2,12 +2,13 @@ import { AppText } from '@/components/ui/AppText'
 import { Bar } from '@/components/ui/Bar'
 import { AUTH0_CLIENT_ID, discovery, redirectUri } from '@/config/auth0.config'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import { getIcon } from '@/services/cloudinaryService'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { clearError } from '@/store/features/auth/auth.slice'
 import { login } from '@/store/features/auth/auth.thunk'
 import * as AuthSession from 'expo-auth-session'
+import { Image } from 'expo-image'
 import { router } from 'expo-router'
 import * as WebBrowser from 'expo-web-browser'
 import React, { useEffect, useMemo } from 'react'
@@ -16,7 +17,6 @@ import {
   ActivityIndicator,
   Alert,
   Button,
-  Image,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -125,7 +125,8 @@ export default function LoginScreen() {
             },
           ]}
           source={getIcon('log', theme)}
-          resizeMode='contain'
+          cachePolicy='memory-disk'
+          contentFit='contain'
         />
         <AppText variant='title' align='center' style={{ color: colors['text-primary'] }}>
           {t('welcome')}

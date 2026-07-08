@@ -2,12 +2,13 @@ import { AchievementsModal } from '@/components/AchievementsModal'
 import { AppText } from '@/components/ui/AppText'
 import { ICON_SIZE } from '@/constants/sizes'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useAchievementsLogic } from '@/hooks/useAchievementsLogic'
-import { useTheme } from '@/hooks/useTheme'
+import { useAchievementsLogic } from '@/hooks/achievements'
+import { useTheme } from '@/hooks/common/useTheme'
 import { AchievementId, getAchievementIcon } from '@/services/cloudinaryService'
 import { getAchievementDetails } from '@/translations/achievements'
+import { Image } from 'expo-image'
 import React, { useMemo } from 'react'
-import { FlatList, Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native'
 import Animated from 'react-native-reanimated'
 
 interface AchievementsProps {
@@ -67,6 +68,7 @@ export const Achievements = ({ animated = true }: AchievementsProps) => {
               <Image
                 source={getAchievementIcon(theme, id as AchievementId)}
                 style={styles.achievementIcon}
+                cachePolicy='memory-disk'
               />
               <AppText variant='small' style={styles.achievementTitle}>
                 {ach.title}
