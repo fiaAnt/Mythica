@@ -1,20 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import achievementsReducer from './features/achievements/achievements.slice'
+import Reactotron from '../../reactotronConfig.cjs'
 import authReducer from './features/auth/auth.slice'
-import exploredReducer from './features/explored/explored.slice'
-import favoritesReducer from './features/favorites/favorites.slice'
-import notesReducer from './features/notes/notes.slice'
-import progressReducer from './features/progress/progress.slice'
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    favorites: favoritesReducer,
-    explored: exploredReducer,
-    notes: notesReducer,
-    progress: progressReducer,
-    achievements: achievementsReducer,
+  },
+  devTools: process.env.NODE_ENV !== 'production',
+
+  enhancers: (getDefaultEnhancers) => {
+    if (__DEV__) {
+      return getDefaultEnhancers().concat(Reactotron.createEnhancer!())
+    }
+    return getDefaultEnhancers()
   },
 })
 

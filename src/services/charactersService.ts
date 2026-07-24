@@ -1,5 +1,5 @@
 import { db } from '@/firebase'
-import { Character } from '@/hooks/useCharacters/useCharacters.types'
+import { Character } from '@/hooks/characters/useCharacters.types'
 import { collection, getDocs } from 'firebase/firestore'
 
 export const getCharacters = async (language: string): Promise<Character[]> => {

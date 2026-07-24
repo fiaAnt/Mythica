@@ -95,7 +95,6 @@ export const login = createAsyncThunk(
         const userRef = collection(db, 'users')
         const q = query(userRef, where('email', '==', auth0User.email))
         const querySnapshot = await getDocs(q)
-
         let userId: string
         let userDocRef: DocumentReference
         let existingUser = false

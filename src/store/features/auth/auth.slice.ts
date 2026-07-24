@@ -29,7 +29,6 @@ const authSlice = createSlice({
         state.isLoading = false
         state.isAuthenticated = true
         state.user = action.payload.user
-        state.tokens = action.payload.tokens
         state.isInitialized = true
       })
       .addCase(login.rejected, (state, action) => {
@@ -47,7 +46,6 @@ const authSlice = createSlice({
 
         if (action.payload) {
           state.isAuthenticated = true
-          state.tokens = action.payload.tokens
           state.user = action.payload.user
         }
       })
