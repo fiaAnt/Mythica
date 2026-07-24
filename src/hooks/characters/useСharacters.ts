@@ -9,6 +9,8 @@ export const useCharacters = (language = 'en') => {
   } = useQuery({
     queryKey: ['characters', language],
     queryFn: () => getCharacters(language),
+    gcTime: 0,
+    refetchOnMount: true,
   })
 
   return {

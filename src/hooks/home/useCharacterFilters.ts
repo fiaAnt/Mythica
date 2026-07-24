@@ -1,17 +1,16 @@
 import { useCharacters } from '@/hooks/characters'
 import { Character } from '@/hooks/characters/useCharacters.types'
-import { useMemo, useState } from 'react'
+import { useCallback, useDeferredValue, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDebounce } from '../common/useDebounce'
 import { FilterOptions } from './types'
 
 export function useCharacterFilters({ isAuthenticated, userExplored }: FilterOptions) {
   const { i18n } = useTranslation()
   const [searchText, setSearchText] = useState('')
+  const deferredSearchText = useDeferredValue(searchText)
   const [selectedMythology, setSelectedMythology] = useState<string | undefined>()
   const [selectedType, setSelectedType] = useState<string | undefined>()
   const [onlyExplored, setOnlyExplored] = useState(false)
-  const debouncedSearchText = useDebounce(searchText, 300)
 
   const {
     characters,
@@ -19,20 +18,23 @@ export function useCharacterFilters({ isAuthenticated, userExplored }: FilterOpt
     error: charactersError,
   } = useCharacters(i18n.language)
 
-  const handleFiltersApply = (
-    mythology: string | undefined,
-    type: string | undefined,
-    explored: boolean,
-  ) => {
-    setSelectedMythology(mythology)
-    setSelectedType(type)
-    setOnlyExplored(explored)
-  }
+  const handleFiltersApply = useCallback(
+    (mythology: string | undefined, type: string | undefined, explored: boolean) => {
+      setSelectedMythology(mythology)
+      setSelectedType(type)
+      setOnlyExplored(explored)
+    },
+    [],
+  )
+
+  const handleSearchText = useCallback((text: string) => {
+    setSearchText(text)
+  }, [])
 
   const filteredCharacters = useMemo(() => {
     const rules = [
       (char: Character) =>
-        !debouncedSearchText || char.name.toLowerCase().includes(debouncedSearchText.toLowerCase()),
+        !deferredSearchText || char.name.toLowerCase().includes(deferredSearchText.toLowerCase()),
       (char: Character) => !selectedMythology || char.mythology === selectedMythology,
       (char: Character) => !selectedType || char.type === selectedType,
       (char: Character) => {
@@ -44,7 +46,7 @@ export function useCharacterFilters({ isAuthenticated, userExplored }: FilterOpt
     return characters.filter((char) => rules.every((rule) => rule(char)))
   }, [
     characters,
-    debouncedSearchText,
+    deferredSearchText,
     selectedMythology,
     selectedType,
     onlyExplored,
@@ -62,7 +64,7 @@ export function useCharacterFilters({ isAuthenticated, userExplored }: FilterOpt
 
   return {
     searchText,
-    setSearchText,
+    setSearchText: handleSearchText,
     listData,
     charactersLoading,
     charactersError,
