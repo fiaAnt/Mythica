@@ -2,8 +2,8 @@ import { AppText } from '@/components/ui/AppText'
 import { AnimatedCard } from '@/components/ui/character/AnimatedCard'
 import { CharacterDetails } from '@/components/ui/character/CharacterDetails'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { Character } from '@/hooks/useCharacters/useCharacters.types'
-import { useTheme } from '@/hooks/useTheme'
+import { Character } from '@/hooks/characters/useCharacters.types'
+import { useTheme } from '@/hooks/common/useTheme'
 import React, { useMemo } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Icon } from '../../Icon'
@@ -16,7 +16,7 @@ interface CharacterHeaderProps {
 
 export const CharacterHeader = React.memo(
   ({ character, isFavorite, onFavoritePress }: CharacterHeaderProps) => {
-    const { spacing, theme } = useTheme()
+    const { spacing, activeTheme } = useTheme()
     const styles = useMemo(() => createStyles({ spacing }), [spacing])
 
     return (

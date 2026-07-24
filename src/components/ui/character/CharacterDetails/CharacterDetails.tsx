@@ -2,8 +2,8 @@ import { AppText } from '@/components/ui/AppText'
 import { Note } from '@/components/ui/character/Note'
 import { Input } from '@/components/ui/Input'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useNotes } from '@/hooks/useNotes'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
+import { useNotes } from '@/hooks/notes/useNotes'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, View } from 'react-native'
@@ -36,15 +36,21 @@ export const CharacterDetails = ({
     useNotes(characterId)
 
   useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>
     if (noteText) {
       setShouldRender(true)
       opacity.value = 0
       opacity.value = withDelay(DELAY, withTiming(1, { duration: DURATION }))
     } else if (!noteText) {
       opacity.value = withTiming(0, { duration: DURATION })
-      setTimeout(() => {
+      timer = setTimeout(() => {
         setShouldRender(false)
       }, DURATION)
+    }
+    return () => {
+      if (timer) {
+        clearTimeout(timer)
+      }
     }
   }, [noteText, opacity])
 

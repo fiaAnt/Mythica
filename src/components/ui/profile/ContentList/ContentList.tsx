@@ -3,8 +3,10 @@ import { CardList } from '@/components/ui/CardList'
 import { CardItem } from '@/components/ui/CardList/CardList.types'
 import { UNDERLINE_HEIGHT } from '@/constants/sizes'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useCharacters } from '@/hooks/useCharacters'
-import { useTheme } from '@/hooks/useTheme'
+import { useCharacters } from '@/hooks/characters'
+import { useTheme } from '@/hooks/common/useTheme'
+import { useFavorites } from '@/hooks/favorites/useFavorites'
+import { useExplored } from '@/hooks/progress/useExplored'
 import { useAppSelector } from '@/store'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,12 +23,12 @@ export const ContentList = () => {
   )
 
   const { characters, loading: charactersLoading } = useCharacters(i18n.language)
-  const { isInitialized } = useAppSelector((state) => state.auth)
+  const { isInitialized, user } = useAppSelector((state) => state.auth)
 
-  const userFavorites = useAppSelector((state) => state.favorites.favorites)
-  const userExplored = useAppSelector((state) => state.explored.explored)
+  const { data: userFavorites = [], isLoading: isFavoritesLoading } = useFavorites(user?.uid)
+  const { data: userExplored = [], isLoading: isExploredLoading } = useExplored(user?.uid)
 
-  const isLoading = !isInitialized || charactersLoading
+  const isLoading = !isInitialized || charactersLoading || isFavoritesLoading || isExploredLoading
 
   const exploredData = useMemo(() => {
     if (!characters.length) return []

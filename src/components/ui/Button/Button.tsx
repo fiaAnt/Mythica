@@ -1,6 +1,6 @@
 import { AppText } from '@/components/ui/AppText'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import { useMemo } from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 

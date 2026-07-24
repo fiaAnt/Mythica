@@ -5,17 +5,14 @@ import { ContentList } from '@/components/ui/profile/ContentList'
 import { UserInfo } from '@/components/ui/profile/UserInfo'
 import { Toggle } from '@/components/ui/Toggle'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import { changeLanguage } from '@/i18n'
 import {
   cancelAllScheduledNotifications,
   scheduleWeeklyNotification,
 } from '@/services/notifications/notifications'
-import { useAppDispatch, useAppSelector } from '@/store'
-import { fetchExplored } from '@/store/features/explored/explored.thunk'
-import { fetchFavorites } from '@/store/features/favorites/favorites.thunk'
-import { useFocusEffect } from '@react-navigation/native'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import { useAppSelector } from '@/store'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -29,27 +26,9 @@ export default function ProfileScreen() {
     () => createStyles({ colors, spacing, borderRadius }),
     [colors, spacing, borderRadius],
   )
-
-  const dispatch = useAppDispatch()
   const { user } = useAppSelector((state) => state.auth)
   const userName = user?.name
   const userId = user?.uid
-
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchFavorites(userId))
-      dispatch(fetchExplored(userId))
-    }
-  }, [userId, dispatch])
-
-  useFocusEffect(
-    useCallback(() => {
-      if (userId) {
-        dispatch(fetchFavorites(userId))
-        dispatch(fetchExplored(userId))
-      }
-    }, [userId, dispatch]),
-  )
 
   const handleLanguageToggle = async (value: boolean) => {
     const newLang = value ? 'ru' : 'en'

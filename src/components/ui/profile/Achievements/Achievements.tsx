@@ -16,7 +16,7 @@ interface AchievementsProps {
 }
 
 export const Achievements = ({ animated = true }: AchievementsProps) => {
-  const { spacing, theme } = useTheme()
+  const { spacing, activeTheme } = useTheme()
   const styles = useMemo(() => createStyles({ spacing }), [spacing])
 
   const {
@@ -66,7 +66,7 @@ export const Achievements = ({ animated = true }: AchievementsProps) => {
               activeOpacity={0.7}
             >
               <Image
-                source={getAchievementIcon(theme, id as AchievementId)}
+                source={getAchievementIcon(activeTheme, id as AchievementId)}
                 style={styles.achievementIcon}
                 cachePolicy='memory-disk'
               />

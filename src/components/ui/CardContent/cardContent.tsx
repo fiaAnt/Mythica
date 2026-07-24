@@ -8,10 +8,10 @@ import { StyleSheet, View } from 'react-native'
 import { CardContentProps } from './CardContent.types'
 
 export const CardContent = ({ overlayImage, children, cardWidth }: CardContentProps) => {
-  const { spacing, theme } = useTheme()
+  const { spacing, activeTheme } = useTheme()
   const styles = useMemo(() => createStyles({ spacing }), [spacing])
 
-  const backgroundImage = useMemo(() => getIcon('card', theme), [theme])
+  const backgroundImage = useMemo(() => getIcon('card', activeTheme), [activeTheme])
 
   return (
     <View style={[styles.card, { width: cardWidth }]}>

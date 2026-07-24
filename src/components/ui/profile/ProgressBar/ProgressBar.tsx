@@ -1,5 +1,5 @@
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import React, { useEffect, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Animated, {

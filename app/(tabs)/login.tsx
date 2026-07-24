@@ -30,7 +30,7 @@ export default function LoginScreen() {
   const insets = useSafeAreaInsets()
   const { width: windowWidth } = useWindowDimensions()
   const { t } = useTranslation()
-  const { theme, colors, spacing, shadow } = useTheme()
+  const { activeTheme, colors, spacing, shadow } = useTheme()
   const styles = useMemo(() => createStyles({ colors, spacing, shadow }), [colors, spacing, shadow])
   const { isLoading, error, isInitialized } = useAppSelector((state) => state.auth)
 
@@ -65,6 +65,7 @@ export default function LoginScreen() {
           router.replace('/profile')
         } catch (error) {
           Alert.alert('Error', 'Login failed')
+          dispatch(clearError())
         }
 
         return
@@ -124,7 +125,7 @@ export default function LoginScreen() {
               height: windowWidth - spacing['space-xxl'],
             },
           ]}
-          source={getIcon('log', theme)}
+          source={getIcon('log', activeTheme)}
           cachePolicy='memory-disk'
           contentFit='contain'
         />

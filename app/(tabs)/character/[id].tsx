@@ -6,9 +6,9 @@ import { CharacterHeader } from '@/components/ui/character/CharacterHeader'
 import { SimilarCharacters } from '@/components/ui/character/SimilarCharacters'
 import { CARD_MIN_HEIGHT } from '@/constants/sizes'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useCharacterAuthAndData } from '@/hooks/useCharacterAuthAndData'
-import { useCharacterInteractions } from '@/hooks/useCharacterInteractions'
-import { useTheme } from '@/hooks/useTheme'
+import { useCharacterAuthAndData } from '@/hooks/auth/useCharacterAuthAndData'
+import { useCharacterInteractions } from '@/hooks/auth/useCharacterInteractions'
+import { useTheme } from '@/hooks/common/useTheme'
 import React, { useMemo } from 'react'
 import { ScrollView, StyleSheet, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -19,13 +19,12 @@ export default function CharacterScreen() {
   const styles = useMemo(() => createStyles({ spacing, colors }), [spacing, colors])
 
   const data = useCharacterAuthAndData()
-  const { modalType, setModalType, handleFavorite, handleScrollEnd } = useCharacterInteractions({
-    user: data.user,
-    character: data.character,
-    favorites: data.favorites,
-    isFavorite: data.isFavorite,
-    isExplored: data.isExplored,
-  })
+  const { modalType, setModalType, handleFavorite, handleScrollEnd, isFavorite } =
+    useCharacterInteractions({
+      user: data.user,
+      character: data.character,
+      isExplored: data.isExplored,
+    })
 
   if (data.loading) {
     return (
@@ -48,14 +47,14 @@ export default function CharacterScreen() {
       <Bar title={data.character.name} leftIcon='back' path='/' />
 
       <ScrollView
-        onMomentumScrollEnd={handleScrollEnd}
+        onScroll={handleScrollEnd}
         scrollEventThrottle={16}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
         <CharacterHeader
           character={data.character}
-          isFavorite={data.isFavorite}
+          isFavorite={isFavorite}
           onFavoritePress={handleFavorite}
         />
 

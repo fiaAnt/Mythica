@@ -9,8 +9,11 @@
   "only_unexplored": "Только неизученные",
   "filters": "Фильтры",
   "theme": "Тема",
+
   "light_theme": "Светлая тема",
   "dark_theme": "Тёмная тема",
+  "system_theme": "Системная тема",
+
   "theme": "Тема",
   "close": "Закрыть",
   "logOut": "Выйти",

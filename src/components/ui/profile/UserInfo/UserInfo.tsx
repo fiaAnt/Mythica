@@ -1,7 +1,7 @@
 import { AppText } from '@/components/ui/AppText'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useProgress } from '@/hooks/useProgress'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
+import { useProgress } from '@/hooks/progress/useProgress'
 import { getFilters } from '@/services/filtersService'
 import { useAppSelector } from '@/store'
 import { useQuery } from '@tanstack/react-query'
@@ -17,7 +17,7 @@ export const UserInfo = () => {
 
   const { i18n } = useTranslation()
   const user = useAppSelector((state) => state.auth.user)
-  const { getProgress } = useProgress()
+  const { data: progressData } = useProgress(user?.uid)
 
   const { data: filters, isLoading } = useQuery({
     queryKey: ['filters', i18n.language],
@@ -31,7 +31,7 @@ export const UserInfo = () => {
       <View style={styles.loadings}>
         {!isLoading &&
           filters?.mythologies.map((filter) => {
-            const progress = getProgress(filter.value)
+            const progress = progressData?.[filter.value] || { percentage: 0 }
 
             return (
               <View key={filter.value} style={styles.loadingItem}>

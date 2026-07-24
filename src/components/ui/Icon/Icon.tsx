@@ -10,11 +10,9 @@ export interface IconProps {
 }
 
 export const Icon: React.FC<IconProps> = ({ name, size }) => {
-  const { theme } = useTheme()
+  const { activeTheme } = useTheme()
 
-  const normTheme = useMemo(() => String(theme).toLowerCase() as 'dark' | 'light', [theme])
-
-  const iconSource = useMemo(() => getIcon(name, normTheme), [name, normTheme])
+  const iconSource = useMemo(() => getIcon(name, activeTheme), [name, activeTheme])
 
   const pixelSize = IconSizes[size]
 

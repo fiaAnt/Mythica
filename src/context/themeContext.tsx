@@ -10,41 +10,41 @@ import { TYPOGRAPHY } from '../typography'
 export const Themes = {
   Dark: 'dark',
   Light: 'light',
+  System: 'system',
 } as const
 
-export type Theme = (typeof Themes)[keyof typeof Themes]
+export type ThemePreference = (typeof Themes)[keyof typeof Themes]
+
+export type ActiveTheme = 'light' | 'dark'
 
 type ThemeColorsType = typeof LIGHT_COLORS
 
-const COLORS_BY_THEME: Record<Theme, ThemeColorsType> = {
-  [Themes.Dark]: DARK_COLORS,
-  [Themes.Light]: LIGHT_COLORS,
+const COLORS_BY_THEME: Record<ActiveTheme, ThemeColorsType> = {
+  light: LIGHT_COLORS,
+  dark: DARK_COLORS,
 } as const
 
-function isValidThemePreference(preference: unknown): preference is Theme {
-  return Object.values(Themes).includes(preference as Theme)
+function isValidThemePreference(preference: unknown): preference is ThemePreference {
+  return Object.values(Themes).includes(preference as ThemePreference)
 }
 
-function resolveTheme(userPreference: Theme, systemScheme: ColorSchemeName): Theme {
-  if (userPreference !== Themes.Light) {
-    return userPreference
+function resolveTheme(userPreference: ThemePreference, systemScheme: ColorSchemeName): ActiveTheme {
+  if (userPreference === Themes.System) {
+    return systemScheme === 'dark' ? 'dark' : 'light'
   }
 
-  if (systemScheme === 'dark') {
-    return Themes.Dark
-  }
-
-  return Themes.Light
+  return userPreference as ActiveTheme
 }
 
 export interface ThemeContextValue {
-  theme: Theme
+  activeTheme: ActiveTheme
+  themePreference: ThemePreference
   colors: ThemeColorsType
   typography: typeof TYPOGRAPHY
   spacing: typeof SPACING
   borderRadius: typeof BORDER_RADIUS
   shadow: typeof SHADOW
-  setThemePreference: (themePreference: Theme) => void
+  setThemePreference: (themePreference: ThemePreference) => void
 }
 
 export const ThemeContext = createContext<ThemeContextValue | null>(null)
@@ -54,30 +54,31 @@ export interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [themePreference, setThemePreferenceInternal] = useState<Theme>(() => {
+  const [themePreference, setThemePreferenceInternal] = useState<ThemePreference>(() => {
     const savedPreference = getThemePreference()
-    return isValidThemePreference(savedPreference) ? savedPreference : Themes.Light
+    return isValidThemePreference(savedPreference) ? savedPreference : Themes.System // Логичнее по умолчанию ставить System
   })
 
   const systemScheme = useColorScheme()
-  const theme = resolveTheme(themePreference, systemScheme)
+  const activeTheme = resolveTheme(themePreference, systemScheme)
 
-  const updateThemePreference = useCallback((newPreference: Theme) => {
+  const updateThemePreference = useCallback((newPreference: ThemePreference) => {
     setThemePreferenceInternal(newPreference)
     setThemePreference(newPreference)
   }, [])
 
   const contextValue: ThemeContextValue = useMemo(
     () => ({
-      theme,
-      colors: COLORS_BY_THEME[theme],
+      activeTheme,
+      themePreference,
+      colors: COLORS_BY_THEME[activeTheme],
       typography: TYPOGRAPHY,
       spacing: SPACING,
       borderRadius: BORDER_RADIUS,
       shadow: SHADOW,
       setThemePreference: updateThemePreference,
     }),
-    [theme, updateThemePreference],
+    [activeTheme, themePreference, updateThemePreference],
   )
 
   return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>

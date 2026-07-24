@@ -1,5 +1,5 @@
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import { ThemeColor } from '@/theme/colors'
 import { useMemo } from 'react'
 import { StyleSheet, Text, TextStyle } from 'react-native'

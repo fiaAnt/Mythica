@@ -1,7 +1,7 @@
 import { Menu } from '@/components/Menu'
 import { AppText } from '@/components/ui/AppText'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import { Href, router } from 'expo-router'
 import React, { useMemo } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'

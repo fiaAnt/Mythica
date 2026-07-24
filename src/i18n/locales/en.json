@@ -37,6 +37,7 @@
 
   "light_theme": "Light Theme",
   "dark_theme": "Dark Theme",
+  "system_theme": "System Theme",
 
   "characterError": "Character not found",
   "funFact": "Fun facts:",

@@ -1,8 +1,9 @@
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useEffect } from 'react'
 import { ColorValue, StyleSheet, View } from 'react-native'
 import Animated, {
+  cancelAnimation,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -14,7 +15,6 @@ interface CardSkeletonProps {
   height?: number
   borderRadius?: number
 }
-
 export const CardSkeleton = ({
   width = 400,
   height = 300,
@@ -31,6 +31,10 @@ export const CardSkeleton = ({
 
   useEffect(() => {
     translateX.value = withRepeat(withTiming(width, { duration: 1200 }), -1, false)
+
+    return () => {
+      cancelAnimation(translateX)
+    }
   }, [width])
 
   const animatedStyle = useAnimatedStyle(() => {
