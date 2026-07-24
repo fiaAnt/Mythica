@@ -24,7 +24,7 @@ export const AchievementsModal = ({
   description,
   achievementId,
 }: AchievementsModalProps) => {
-  const { colors, spacing, borderRadius, theme } = useTheme()
+  const { colors, spacing, borderRadius, activeTheme } = useTheme()
   const styles = useMemo(
     () => createStyles({ colors, spacing, borderRadius }),
     [colors, spacing, borderRadius],
@@ -46,7 +46,7 @@ export const AchievementsModal = ({
           </AppText>
 
           <Image
-            source={getAchievementIcon(theme, achievementId)}
+            source={getAchievementIcon(activeTheme, achievementId)}
             style={styles.image}
             contentFit='contain'
           />

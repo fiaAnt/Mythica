@@ -1,8 +1,9 @@
 import { AppText } from '@/components/ui/AppText'
 import { Button } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
-import { Theme, ThemeContextValue, Themes } from '@/context/ThemeContext'
-import { useTheme } from '@/hooks/useTheme'
+import { Toggle } from '@/components/ui/Toggle'; // Импортируем ваш Toggle
+import { ThemeContextValue, ThemePreference, Themes } from '@/context/ThemeContext'
+import { useTheme } from '@/hooks/common/useTheme'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
@@ -13,7 +14,8 @@ interface ThemeModalProps {
 }
 
 export const ThemeModal = ({ visible, onClose }: ThemeModalProps) => {
-  const { theme, colors, spacing, borderRadius, setThemePreference } = useTheme()
+  const { themePreference, activeTheme, colors, spacing, borderRadius, setThemePreference } =
+    useTheme()
   const { t } = useTranslation()
 
   const styles = useMemo(
@@ -21,8 +23,17 @@ export const ThemeModal = ({ visible, onClose }: ThemeModalProps) => {
     [colors, spacing, borderRadius],
   )
 
-  const handleThemeSelect = (newTheme: Theme) => {
-    newTheme = theme === Themes.Light ? Themes.Dark : Themes.Light
+  const isSystemTheme = themePreference === Themes.System
+
+  const handleSystemToggle = (useSystem: boolean) => {
+    if (useSystem) {
+      setThemePreference(Themes.System)
+    } else {
+      setThemePreference(activeTheme as ThemePreference)
+    }
+  }
+
+  const handleThemeSelect = (newTheme: ThemePreference) => {
     setThemePreference(newTheme)
   }
 
@@ -44,17 +55,23 @@ export const ThemeModal = ({ visible, onClose }: ThemeModalProps) => {
           </View>
 
           <View style={styles.content}>
-            <Button
-              title={t('light_theme')}
-              variant={theme === Themes.Light ? 'primary' : 'secondary'}
-              onPress={() => handleThemeSelect(Themes.Light)}
-            />
+            <Toggle label={t('system_theme')} value={isSystemTheme} onToggle={handleSystemToggle} />
+            {!isSystemTheme && (
+              <View style={styles.manualThemeContainer}>
+                <Button
+                  title={t('light_theme')}
+                  variant={themePreference === Themes.Light ? 'primary' : 'secondary'}
+                  onPress={() => handleThemeSelect(Themes.Light)}
+                />
 
-            <Button
-              title={t('dark_theme')}
-              variant={theme === Themes.Dark ? 'primary' : 'secondary'}
-              onPress={() => handleThemeSelect(Themes.Dark)}
-            />
+                <Button
+                  title={t('dark_theme')}
+                  variant={themePreference === Themes.Dark ? 'primary' : 'secondary'}
+                  onPress={() => handleThemeSelect(Themes.Dark)}
+                />
+              </View>
+            )}
+
             <Button title={t('close')} variant='secondary' onPress={onClose} />
           </View>
         </View>
@@ -84,6 +101,8 @@ const createStyles = ({ colors, spacing, borderRadius }: ThemeStyleProps) =>
     },
     content: {
       gap: spacing['space-xl'],
-      marginHorizontal: spacing['space-xl'],
+    },
+    manualThemeContainer: {
+      gap: spacing['space-md'],
     },
   })

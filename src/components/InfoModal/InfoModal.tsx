@@ -1,7 +1,7 @@
 import { AppText } from '@/components/ui/AppText'
 import { Button } from '@/components/ui/Button'
 import { ThemeContextValue } from '@/context/ThemeContext'
-import { useTheme } from '@/hooks/useTheme'
+import { useTheme } from '@/hooks/common/useTheme'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, StyleSheet, View } from 'react-native'
